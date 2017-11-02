@@ -55,3 +55,9 @@ sysinfo.txt
 *.unitypackage
 
 # End of https://www.gitignore.io/api/unity,microsoftoffice
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
