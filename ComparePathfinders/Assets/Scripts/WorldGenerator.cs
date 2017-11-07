@@ -1,15 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
+[RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
+[RequireComponent(typeof(NavMeshSurface))]
 public class WorldGenerator : MonoBehaviour {
 
-	public int worldHeight;
-	public int worldWidth;
-	public int worldDepth;
+	public int worldHeight = 1000;
+	public int worldWidth = 100;
+	public int worldDepth = 100;
 	[Range(0.001f,1)]
-	public float noiseScale;
+	public float noiseScale = 0.05f;
 	private float[,] world;
+
+	// Just some fun stuff
+	public float flowSpeedX = 0.1f;
+	public float flowSpeedY = 0.1f;
+	float offsetX = 0;
+	float offsetY = 0;
 
 	// Mesh data
 	Vector3[] vertices;
@@ -21,10 +31,13 @@ public class WorldGenerator : MonoBehaviour {
 
 	Renderer meshTexture;
 
+	NavMeshSurface navMeshSurface;
+
 	// Use this for initialization
 	void Start () {
 		meshTexture = GetComponent<MeshRenderer>();
 		meshFilter = GetComponent<MeshFilter>();
+		navMeshSurface = GetComponent<NavMeshSurface>();
 
 		GenerateNoise();
 		GenerateTexture();
@@ -32,6 +45,7 @@ public class WorldGenerator : MonoBehaviour {
 		meshFilter.mesh = mesh;
 
 		transform.localScale = new Vector3(worldWidth, worldHeight, worldDepth);
+		navMeshSurface.BuildNavMesh();
 	}
 
 	void Update() {
@@ -41,10 +55,6 @@ public class WorldGenerator : MonoBehaviour {
 		// meshFilter.mesh = mesh;
 	}
 
-	public float flowSpeedX = 0.1f;
-	public float flowSpeedY = 0.1f;
-	float offsetX = 0;
-	float offsetY = 0;
 	void GenerateNoise() {
 		world = new float[worldWidth, worldDepth];
 

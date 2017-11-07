@@ -190,8 +190,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 467122188}
-  m_LocalRotation: {x: -0.0663249, y: 0.9106346, z: -0.37464973, w: -0.16119328}
-  m_LocalPosition: {x: 8615.542, y: 5270.9194, z: 12533.994}
+  m_LocalRotation: {x: -0.36756235, y: 0.121406406, z: -0.048464727, w: -0.92076576}
+  m_LocalPosition: {x: 404.8726, y: 391.8188, z: -210.239}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -430,6 +430,7 @@ GameObject:
   - component: {fileID: 2025863470}
   - component: {fileID: 2025863469}
   - component: {fileID: 2025863472}
+  - component: {fileID: 2025863473}
   m_Layer: 0
   m_Name: WorldGenerator
   m_TagString: Untagged
@@ -448,10 +449,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f467c1a208281c498b2449c01faeaad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldHeight: 1000
-  worldWidth: 100
-  worldDepth: 100
-  noiseScale: 0.05
+  worldHeight: 50
+  worldWidth: 25
+  worldDepth: 25
+  noiseScale: 0.3
   flowSpeedX: -0.02
   flowSpeedY: 0
 --- !u!33 &2025863470
@@ -506,3 +507,31 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &2025863473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2025863468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_BuildHeightMesh: 0
+  m_NavMeshData: {fileID: 0}
