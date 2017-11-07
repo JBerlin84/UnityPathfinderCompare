@@ -14,6 +14,9 @@ public class WorldGenerator : MonoBehaviour {
 	[Range(0.001f,1)]
 	public float noiseScale = 0.05f;
 	private float[,] world;
+	public float[,] World {
+		get { return world; }
+	}
 
 	// Just some fun stuff
 	public float flowSpeedX = 0.1f;
@@ -34,7 +37,7 @@ public class WorldGenerator : MonoBehaviour {
 	NavMeshSurface navMeshSurface;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		meshTexture = GetComponent<MeshRenderer>();
 		meshFilter = GetComponent<MeshFilter>();
 		navMeshSurface = GetComponent<NavMeshSurface>();
@@ -44,7 +47,7 @@ public class WorldGenerator : MonoBehaviour {
 		GenerateMesh();
 		meshFilter.mesh = mesh;
 
-		transform.localScale = new Vector3(worldWidth, worldHeight, worldDepth);
+		//transform.localScale = new Vector3(worldWidth, worldHeight, worldDepth);
 		navMeshSurface.BuildNavMesh();
 	}
 
@@ -60,7 +63,7 @@ public class WorldGenerator : MonoBehaviour {
 
 		for(int i=0;i<worldWidth;i++) {
 			for(int j=0;j<worldWidth;j++) {
-				world[i,j] = Mathf.PerlinNoise(i*noiseScale+offsetY, j*noiseScale+offsetX);
+				world[i,j] = Mathf.PerlinNoise(i*noiseScale+offsetY, j*noiseScale+offsetX) * worldHeight;
 			}
 		}
 		offsetX += flowSpeedX;

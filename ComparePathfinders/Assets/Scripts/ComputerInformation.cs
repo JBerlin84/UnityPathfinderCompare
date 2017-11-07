@@ -19,7 +19,7 @@ public class ComputerInformation : MonoBehaviour {
 	private float time;
 	public float measureFrequency = 1;
 
-	void Start () {
+	void Awake () {
 		deviceType = SystemInfo.deviceType.ToString();
 		operatingSystem = SystemInfo.operatingSystem.ToString();
 		logicalCores = SystemInfo.processorCount.ToString();
