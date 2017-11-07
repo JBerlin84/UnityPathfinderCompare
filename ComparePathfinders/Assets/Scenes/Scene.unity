@@ -347,9 +347,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f467c1a208281c498b2449c01faeaad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldHeight: 0
   worldWidth: 100
   worldDepth: 100
   noiseScale: 0.1
+  flowSpeedX: 0.1
+  flowSpeedY: 0.1
 --- !u!23 &1421718691
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -445,9 +448,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f467c1a208281c498b2449c01faeaad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  worldHeight: 1000
   worldWidth: 100
   worldDepth: 100
-  noiseScale: 0.1
+  noiseScale: 0.05
+  flowSpeedX: -0.02
+  flowSpeedY: 0
 --- !u!33 &2025863470
 MeshFilter:
   m_ObjectHideFlags: 0

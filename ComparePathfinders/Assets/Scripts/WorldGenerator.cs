@@ -26,27 +26,38 @@ public class WorldGenerator : MonoBehaviour {
 		meshTexture = GetComponent<MeshRenderer>();
 		meshFilter = GetComponent<MeshFilter>();
 
-		transform.localScale = new Vector3(worldWidth, worldHeight, worldDepth);
-
 		GenerateNoise();
 		GenerateTexture();
 		GenerateMesh();
 		meshFilter.mesh = mesh;
+
+		transform.localScale = new Vector3(worldWidth, worldHeight, worldDepth);
 	}
 
+	void Update() {
+		// GenerateNoise();
+		// GenerateTexture();
+		// GenerateMesh();
+		// meshFilter.mesh = mesh;
+	}
+
+	public float flowSpeedX = 0.1f;
+	public float flowSpeedY = 0.1f;
+	float offsetX = 0;
+	float offsetY = 0;
 	void GenerateNoise() {
-		print("Generate noise");
 		world = new float[worldWidth, worldDepth];
 
 		for(int i=0;i<worldWidth;i++) {
 			for(int j=0;j<worldWidth;j++) {
-				world[i,j] = Mathf.PerlinNoise(i*noiseScale, j*noiseScale);
+				world[i,j] = Mathf.PerlinNoise(i*noiseScale+offsetY, j*noiseScale+offsetX);
 			}
 		}
+		offsetX += flowSpeedX;
+		offsetY += flowSpeedY;
 	}
 
 	void GenerateTexture() {
-		print("Generates texture");
 		Texture2D texture= new Texture2D(worldWidth, worldDepth);
 		
 		Color[] colorMap = new Color[worldWidth * worldDepth];
@@ -62,7 +73,6 @@ public class WorldGenerator : MonoBehaviour {
 	}
 
 	void GenerateMesh() {
-		print("Generates mesh");
 		// Mesh data
 		vertices = new Vector3[worldWidth*worldDepth];
 		triangles = new int[(worldWidth-1) * (worldDepth-1) * 6];
