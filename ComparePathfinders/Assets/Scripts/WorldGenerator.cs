@@ -47,7 +47,6 @@ public class WorldGenerator : MonoBehaviour {
 		GenerateMesh();
 		meshFilter.mesh = mesh;
 
-		//transform.localScale = new Vector3(worldWidth, worldHeight, worldDepth);
 		navMeshSurface.BuildNavMesh();
 	}
 

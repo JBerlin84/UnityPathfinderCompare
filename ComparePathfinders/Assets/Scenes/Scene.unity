@@ -139,7 +139,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e17461b03eb197d4c85c71cbb2ffb471, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -273,7 +273,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 467122188}
   m_LocalRotation: {x: -0.40084016, y: -0.08446112, z: 0.03715118, w: -0.91148967}
-  m_LocalPosition: {x: 14.640199, y: 42.09784, z: -18.575026}
+  m_LocalPosition: {x: 34.381393, y: 61.13473, z: -34.650818}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -311,7 +311,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 22d4cf0226704544396e426d8c8f76e9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -518,6 +518,8 @@ MonoBehaviour:
   agent: {fileID: 534929571}
   target: {fileID: 364793332}
   worldGenerator: {fileID: 2025863469}
+  seed: 0
+  numberOfSimulations: 1000
 --- !u!1 &2025863468
 GameObject:
   m_ObjectHideFlags: 0
@@ -549,8 +551,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldHeight: 5
-  worldWidth: 50
-  worldDepth: 50
+  worldWidth: 100
+  worldDepth: 100
   noiseScale: 0.1
   flowSpeedX: -0.02
   flowSpeedY: 0
