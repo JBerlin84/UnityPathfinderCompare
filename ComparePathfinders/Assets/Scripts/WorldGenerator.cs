@@ -8,11 +8,11 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshSurface))]
 public class WorldGenerator : MonoBehaviour {
 
-	public int worldHeight = 1000;
-	public int worldWidth = 100;
-	public int worldDepth = 100;
+	public int worldHeight = 5;
+	public int worldWidth = 50;
+	public int worldDepth = 50;
 	[Range(0.001f,1)]
-	public float noiseScale = 0.05f;
+	public float noiseScale = 0.1f;
 	private float[,] world;
 	public float[,] World {
 		get { return world; }

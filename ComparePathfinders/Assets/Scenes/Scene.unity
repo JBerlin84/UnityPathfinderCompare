@@ -272,8 +272,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 467122188}
-  m_LocalRotation: {x: -0.36756235, y: 0.121406406, z: -0.048464727, w: -0.92076576}
-  m_LocalPosition: {x: 404.8726, y: 391.8188, z: -210.239}
+  m_LocalRotation: {x: -0.40084016, y: -0.08446112, z: 0.03715118, w: -0.91148967}
+  m_LocalPosition: {x: 14.640199, y: 42.09784, z: -18.575026}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -517,7 +517,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 534929571}
   target: {fileID: 364793332}
-  worldGenerator: {fileID: 0}
+  worldGenerator: {fileID: 2025863469}
 --- !u!1 &2025863468
 GameObject:
   m_ObjectHideFlags: 0
@@ -548,7 +548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f467c1a208281c498b2449c01faeaad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldHeight: 10
+  worldHeight: 5
   worldWidth: 50
   worldDepth: 50
   noiseScale: 0.1

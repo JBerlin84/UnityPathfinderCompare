@@ -21,5 +21,8 @@ public class NavSimulation : MonoBehaviour {
 
 		agent.transform.position = new Vector3(1, world[1,1], 1);
 		target.transform.position = new Vector3(xSize-2, world[xSize-2, zSize-2], zSize-2);
+
+		NavMeshPath path = new NavMeshPath();
+		agent.CalculatePath(target.position, path);
 	}
 }
