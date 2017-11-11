@@ -19,31 +19,86 @@ public class NavSimulation : MonoBehaviour {
 	private Vector3[] targetPositions;
 	// Use this for initialization
 
+	Stopwatch builtInSimulationTimer = new System.Diagnostics.Stopwatch();
+	Stopwatch aStarSingleThreadedSimulationTimer = new System.Diagnostics.Stopwatch();
+	int simulationsRunSoFar = 0;
+
+	bool builtInSimulatorFinished = false;
+	bool aStarSingleThreadedFinished = false;
+
+
+	AStarPathfinder aStar;
+
+
 	void Start () {
 
 		Random.InitState(seed);
 		world = worldGenerator.World;
+		aStar = new AStarPathfinder(world);
 
 		prepareSimulations(world.GetLength(0), world.GetLength(1));
-		runSimulations();
-		
 	}
 
-	void runSimulations() {
-		Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-
-		for(int i=0;i<numberOfSimulations;i++) {
-			agent.transform.position = startPositions[i];
-			target.transform.position = targetPositions[i];
-			NavMeshPath path = new NavMeshPath();
-			if(agent.CalculatePath(target.position, path)) {
-				// print("Path calculated between " + startPositions[i].ToString() + " and " + targetPositions[i].ToString() + "!");
-			} else {
-				// print("Path could not be found between " + startPositions[i].ToString() + " and " + targetPositions[i].ToString() + "!");
-			}
+	void Update() {
+		if(!builtInSimulatorFinished) {
+			runBuiltInSimulation();
+		} else if (!aStarSingleThreadedFinished) {
+			runAStarSingleThreadedSimulation();
+		} else {
+			print("The built in simulation took: " + builtInSimulationTimer.ElapsedTicks + " ticks. (" + builtInSimulationTimer.ElapsedMilliseconds + " ms)\n" + 
+					"The A* single threaded simulation took: " + aStarSingleThreadedSimulationTimer.ElapsedTicks + " ticks. (" + aStarSingleThreadedSimulationTimer.ElapsedMilliseconds + " ms)" +
+					"The total number of lookups are: " + aStar.TotalLookupsInCalculate());
 		}
-		watch.Stop();
-		print("The simulation took: " + watch.ElapsedMilliseconds + " milliseconds");
+	}
+
+	void runAStarSingleThreadedSimulation() {
+		Stopwatch frameWatch = System.Diagnostics.Stopwatch.StartNew();
+
+		if(simulationsRunSoFar < numberOfSimulations) {
+			while(simulationsRunSoFar < numberOfSimulations && frameWatch.ElapsedMilliseconds < 1) {
+				agent.transform.position = startPositions[simulationsRunSoFar];
+				target.transform.position = targetPositions[simulationsRunSoFar];
+
+				aStarSingleThreadedSimulationTimer.Start();
+				aStar.Setup(agent.transform.position, target.transform.position);
+				if(aStar.CalculatePath()) {
+//					print("WE FOUND SOMETHING WITH A*");
+				} else {
+//					print("we did not found anything with A* :'(");
+				}
+				aStarSingleThreadedSimulationTimer.Stop();
+
+				++simulationsRunSoFar;
+			}
+		} else {
+			aStarSingleThreadedFinished = true;
+			simulationsRunSoFar = 0;
+		}
+	}
+
+	void runBuiltInSimulation() {
+		Stopwatch frameWatch = System.Diagnostics.Stopwatch.StartNew();
+		
+		if(simulationsRunSoFar < numberOfSimulations) {
+			while(simulationsRunSoFar < numberOfSimulations && frameWatch.ElapsedMilliseconds < 1) {
+				agent.transform.position = startPositions[simulationsRunSoFar];
+				target.transform.position = targetPositions[simulationsRunSoFar];
+				
+				builtInSimulationTimer.Start();
+				NavMeshPath path = new NavMeshPath();
+				if(agent.CalculatePath(target.position, path)) {
+					//print("Path calculated between " + startPositions[simulationsRunSoFar].ToString() + " and " + targetPositions[simulationsRunSoFar].ToString() + "!");
+				} else {
+					//print("Path could not be found between " + startPositions[simulationsRunSoFar].ToString() + " and " + targetPositions[simulationsRunSoFar].ToString() + "!");
+				}
+				builtInSimulationTimer.Stop();
+				
+				++simulationsRunSoFar;
+			}
+		} else {
+			builtInSimulatorFinished = true;
+			simulationsRunSoFar = 0;
+		}
 	}
 
 	void prepareSimulations(int xSize, int zSize) {

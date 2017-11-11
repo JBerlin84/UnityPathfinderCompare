@@ -519,7 +519,7 @@ MonoBehaviour:
   target: {fileID: 364793332}
   worldGenerator: {fileID: 2025863469}
   seed: 0
-  numberOfSimulations: 1000
+  numberOfSimulations: 10
 --- !u!1 &2025863468
 GameObject:
   m_ObjectHideFlags: 0
