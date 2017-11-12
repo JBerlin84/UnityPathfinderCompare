@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AStarPathfinder {
 
-	ArrayList closedSet;
+	Queue<Node> closedSet;
 	ArrayList openSet;	// should start with one node.
 
 	Node[,] map;
@@ -52,7 +52,7 @@ public class AStarPathfinder {
 	}
 
 	public void Setup(Vector3 start = new Vector3(), Vector3 goal = new Vector3()) {
-		closedSet = new ArrayList();
+		closedSet = new Queue<Node>();
 		openSet = new ArrayList();
 		cameFrom = new Node[xDim, yDim];
 
@@ -82,7 +82,7 @@ public class AStarPathfinder {
 			}
 
 			openSet.Remove(current);
-			closedSet.Add(current);
+			closedSet.Enqueue(current);
 
 			foreach(Node neighbour in current.Neighbors) {
 				if(closedSet.Contains(neighbour)) {

@@ -32,11 +32,38 @@ public class NavSimulation : MonoBehaviour {
 
 	void Start () {
 
+
+
+
+		PriorityQueue<int> pq = new PriorityQueue<int>();
+
+		for(int i=0;i<10;i++) {
+			int r=Random.Range(0,10);
+			print("Adding: " + r);
+			pq.Add(r);
+		}
+
+		for(int i=0;i<10;i++) {
+			print("Fetched: " + pq.Remove());
+		}
+
+/*		Node[] list = new Node[3];
+		Random rnd = new Random();
+
+
+		for(int i=0;i<list.Length;i++) {
+			Node g = new Node(Vector3.zero);
+			g.FScore = Random.Range(0,10);
+		}*/
+
+
+
+/*
 		Random.InitState(seed);
 		world = worldGenerator.World;
 		aStar = new AStarPathfinder(world);
 
-		prepareSimulations(world.GetLength(0), world.GetLength(1));
+		prepareSimulations(world.GetLength(0), world.GetLength(1));*/
 	}
 
 	void Update() {

@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-class Node {
+class Node : IComparable {
 	float gScore;	// Default infinity with the exception of the start node.
 	public float GScore { get { return gScore; } set { gScore = value; } }
 	float fScore;	// Estimated cost from this node to the end. (for the first node its completely heuristic.)
@@ -32,5 +33,15 @@ class Node {
 
 	public void AddNeighbor(Node neighbor) {
 		neighbors.Add(neighbor);
+	}
+
+	int IComparable.CompareTo(object obj) {
+		if(fScore < (obj as Node).FScore) {
+			return -1;
+		} else if(fScore < (obj as Node).FScore) {
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 }
