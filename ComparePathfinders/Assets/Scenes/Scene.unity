@@ -554,8 +554,32 @@ MonoBehaviour:
   worldWidth: 100
   worldDepth: 100
   noiseScale: 0.1
-  flowSpeedX: -0.02
-  flowSpeedY: 0
+  worldCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.63468254
+      value: 0.0035214014
+      inSlope: -0.025742985
+      outSlope: -0.025742985
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.84016395
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  useSeed: 0
+  seed: 0
 --- !u!33 &2025863470
 MeshFilter:
   m_ObjectHideFlags: 0

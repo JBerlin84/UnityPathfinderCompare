@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Diagnostics;
+using Priority_Queue;
 
 public class NavSimulation : MonoBehaviour {
 
@@ -21,60 +22,35 @@ public class NavSimulation : MonoBehaviour {
 
 	Stopwatch builtInSimulationTimer = new System.Diagnostics.Stopwatch();
 	Stopwatch aStarSingleThreadedSimulationTimer = new System.Diagnostics.Stopwatch();
+	
+	Stopwatch aStarSingleThreadedSimulationTimerOLD = new System.Diagnostics.Stopwatch();
 	int simulationsRunSoFar = 0;
 
 	bool builtInSimulatorFinished = false;
 	bool aStarSingleThreadedFinished = false;
 
-
 	AStarPathfinder aStar;
 
+	void Start() {
 
-	void Start () {
-
-
-
-
-		PriorityQueue<int> pq = new PriorityQueue<int>();
-
-		for(int i=0;i<10;i++) {
-			int r=Random.Range(0,10);
-			print("Adding: " + r);
-			pq.Add(r);
-		}
-
-		for(int i=0;i<10;i++) {
-			print("Fetched: " + pq.Remove());
-		}
-
-/*		Node[] list = new Node[3];
-		Random rnd = new Random();
-
-
-		for(int i=0;i<list.Length;i++) {
-			Node g = new Node(Vector3.zero);
-			g.FScore = Random.Range(0,10);
-		}*/
-
-
-
-/*
 		Random.InitState(seed);
 		world = worldGenerator.World;
 		aStar = new AStarPathfinder(world);
-
-		prepareSimulations(world.GetLength(0), world.GetLength(1));*/
+		
+		prepareSimulations(world.GetLength(0), world.GetLength(1));
 	}
 
 	void Update() {
 		if(!builtInSimulatorFinished) {
 			runBuiltInSimulation();
 		} else if (!aStarSingleThreadedFinished) {
+			print("Running PQ custom");
 			runAStarSingleThreadedSimulation();
-		} else {
+		}
+		
+		if(builtInSimulatorFinished && aStarSingleThreadedFinished) {
 			print("The built in simulation took: " + builtInSimulationTimer.ElapsedTicks + " ticks. (" + builtInSimulationTimer.ElapsedMilliseconds + " ms)\n" + 
-					"The A* single threaded simulation took: " + aStarSingleThreadedSimulationTimer.ElapsedTicks + " ticks. (" + aStarSingleThreadedSimulationTimer.ElapsedMilliseconds + " ms)" +
-					"The total number of lookups are: " + aStar.TotalLookupsInCalculate());
+					"The A* single threaded simulation took: " + aStarSingleThreadedSimulationTimer.ElapsedTicks + " ticks. (" + aStarSingleThreadedSimulationTimer.ElapsedMilliseconds + " ms)");
 		}
 	}
 
@@ -89,9 +65,9 @@ public class NavSimulation : MonoBehaviour {
 				aStarSingleThreadedSimulationTimer.Start();
 				aStar.Setup(agent.transform.position, target.transform.position);
 				if(aStar.CalculatePath()) {
-//					print("WE FOUND SOMETHING WITH A*");
+				//	print("WE FOUND SOMETHING WITH A*");
 				} else {
-//					print("we did not found anything with A* :'(");
+				//	print("we did not found anything with A* :'(");
 				}
 				aStarSingleThreadedSimulationTimer.Stop();
 
@@ -131,6 +107,23 @@ public class NavSimulation : MonoBehaviour {
 	void prepareSimulations(int xSize, int zSize) {
 		startPositions = new Vector3[numberOfSimulations];
 		targetPositions = new Vector3[numberOfSimulations];
+
+		// while(startPositions.Length < numberOfSimulations) {
+		// 	int x = Random.Range(0, xSize-1);
+		// 	int z = Random.Range(0, zSize-1);
+		// 	if(world[x,z] == 0) {
+		// 		startPositions[startPositions.Length] = new Vector3(x, world[x,z], z);
+		// 	}
+		// }
+
+		// while(targetPositions.Length < numberOfSimulations) {
+		// 	int x = Random.Range(0, xSize-1);
+		// 	int z = Random.Range(0, zSize-1);
+		// 	if(world[x,z] == 0) {
+		// 		targetPositions[targetPositions.Length] = new Vector3(x, world[x,z], z);
+		// 	}
+		// }
+
 
 		for(int i=0;i<numberOfSimulations;i++) {
 			// Start
