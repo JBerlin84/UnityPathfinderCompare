@@ -29,7 +29,6 @@ public class WorldGeneratorTiled : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
 		Transform parent = new GameObject("Map").transform;
 
 		for (int i=0;i<worldWidth;i++) {
