@@ -14,6 +14,7 @@ class Node : IComparable {
 
 	Vector3 position3D;
 	public Vector3 Position3D { get { return position3D; } }
+	public Vector3 ElevatedPosition3D { get { return new Vector3(X, 1, Y); } }
 
 	int x;
 	public int X { get { return x; } }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Diagnostics;
-using Priority_Queue;
 
 public class NavSimulation : MonoBehaviour {
 
@@ -44,7 +43,6 @@ public class NavSimulation : MonoBehaviour {
 		if(!builtInSimulatorFinished) {
 			runBuiltInSimulation();
 		} else if (!aStarSingleThreadedFinished) {
-			print("Running PQ custom");
 			runAStarSingleThreadedSimulation();
 		}
 		
@@ -65,7 +63,7 @@ public class NavSimulation : MonoBehaviour {
 				aStarSingleThreadedSimulationTimer.Start();
 				aStar.Setup(agent.transform.position, target.transform.position);
 				if(aStar.CalculatePath()) {
-				//	print("WE FOUND SOMETHING WITH A*");
+				// print("WE FOUND SOMETHING WITH A*");
 				} else {
 				//	print("we did not found anything with A* :'(");
 				}
@@ -107,23 +105,6 @@ public class NavSimulation : MonoBehaviour {
 	void prepareSimulations(int xSize, int zSize) {
 		startPositions = new Vector3[numberOfSimulations];
 		targetPositions = new Vector3[numberOfSimulations];
-
-		// while(startPositions.Length < numberOfSimulations) {
-		// 	int x = Random.Range(0, xSize-1);
-		// 	int z = Random.Range(0, zSize-1);
-		// 	if(world[x,z] == 0) {
-		// 		startPositions[startPositions.Length] = new Vector3(x, world[x,z], z);
-		// 	}
-		// }
-
-		// while(targetPositions.Length < numberOfSimulations) {
-		// 	int x = Random.Range(0, xSize-1);
-		// 	int z = Random.Range(0, zSize-1);
-		// 	if(world[x,z] == 0) {
-		// 		targetPositions[targetPositions.Length] = new Vector3(x, world[x,z], z);
-		// 	}
-		// }
-
 
 		for(int i=0;i<numberOfSimulations;i++) {
 			// Start

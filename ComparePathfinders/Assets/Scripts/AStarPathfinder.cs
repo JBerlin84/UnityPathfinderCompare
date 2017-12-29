@@ -81,6 +81,13 @@ public class AStarPathfinder {
 				return true;
 			}
 
+			// If we dont hit anything, we can be sure that we can move there.
+			// get us from 3seconds to 3 ms.
+			RaycastHit hit;
+			if(!Physics.Raycast(current.ElevatedPosition3D, (current.ElevatedPosition3D - goalNode.ElevatedPosition3D), out hit)) {
+				return true;
+			}
+
 			openSet.Remove(current);
 			closedSet.Enqueue(current);
 
