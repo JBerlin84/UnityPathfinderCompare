@@ -50,6 +50,7 @@ public class AStarPathfinder {
 		// Adds all the neighbors.
 		// TODO: This needs to be better. Only adds fourn eighbors now.
 		// TODO: Do i want this here or in Node?
+		/*
 		for(int x=0;x<xDim;x++) {
 			for(int y=0;y<yDim;y++) {
 				if(x>0 && map[x-1,y].Y == 1f)
@@ -60,6 +61,22 @@ public class AStarPathfinder {
 					map[x,y].AddNeighbor(map[x,y-1]);
 				if(y<yDim-1 && map[x,y+1].Y == 1f)
 					map[x,y].AddNeighbor(map[x,y+1]);
+			}
+		}*/
+
+		// TODO: Some cleanup here!
+		for(int x=0;x<xDim;x++) {
+			for(int y=0;y<yDim;y++) {
+				if(map[x,y].Elevation == 0) {	// Make sure that we can walk on the tile that we are.
+					if(x>0 && map[x-1,y].Elevation == 0)
+						map[x,y].AddNeighbor(map[x-1,y]);
+					if(x<xDim-1 && map[x+1,y].Elevation == 0)
+						map[x,y].AddNeighbor(map[x+1,y]);
+					if(y>0 && map[x,y-1].Elevation == 0)
+						map[x,y].AddNeighbor(map[x,y-1]);
+					if(y<yDim-1 && map[x,y+1].Elevation == 0)
+						map[x,y].AddNeighbor(map[x,y+1]);
+				}
 			}
 		}
 
@@ -74,7 +91,7 @@ public class AStarPathfinder {
 		startNode = map[(int)start.x, (int)start.z];
 		goalNode = map[(int)goal.x, (int)goal.z];
 
-		// Rest g- and fScore
+		// Restore g- and f-Score
 		for(int x=0;x<xDim;x++) {
 			for(int y=0;y<yDim;y++) {
 				map[x,y].GScore = float.MaxValue;
@@ -88,6 +105,7 @@ public class AStarPathfinder {
 
 	public bool CalculatePath() {
 		openSet.Add(startNode);
+//		Debug.Log("We start with: " + startNode.Neighbors.Count + " neighbors");
 
 		while(openSet.Count > 0) {
 			Node current = findLowestFScoreInOpenSet();
@@ -98,10 +116,11 @@ public class AStarPathfinder {
 
 			// If we dont hit anything, we can be sure that we can move there.
 			// get us from 3seconds to 3 ms.
+			/*
 			RaycastHit hit;
 			if(!Physics.Raycast(current.ElevatedPosition3D, (current.ElevatedPosition3D - goalNode.ElevatedPosition3D), out hit)) {
 				return true;
-			}
+			}*/
 
 			openSet.Remove(current);
 			closedSet.Enqueue(current);

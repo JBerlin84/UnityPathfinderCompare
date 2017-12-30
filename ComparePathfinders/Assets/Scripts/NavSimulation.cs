@@ -41,7 +41,15 @@ public class NavSimulation : MonoBehaviour {
 	}
 
 	void Update() {
-		runBuiltInSimulationOnTiled();
+		if(!aStarSingleThreadedFinished)
+			runAStarSimulationOnTiled();
+		else if(!builtInSimulatorFinished)
+			runBuiltInSimulationOnTiled();
+
+		if(builtInSimulatorFinished && aStarSingleThreadedFinished) {
+			print("The built in simulation took: " + builtInSimulationTimer.ElapsedTicks + " ticks. (" + builtInSimulationTimer.ElapsedMilliseconds + " ms)\n" + 
+					"The A* single threaded simulation took: " + aStarSingleThreadedSimulationTimer.ElapsedTicks + " ticks. (" + aStarSingleThreadedSimulationTimer.ElapsedMilliseconds + " ms)");
+		}
 
 		/*if(!builtInSimulatorFinished) {
 			runBuiltInSimulation();
@@ -55,17 +63,56 @@ public class NavSimulation : MonoBehaviour {
 		}*/
 	}
 
+	// This seems to work
 	void runBuiltInSimulationOnTiled() {
-		agent.transform.position = startPositions[0];
-		target.transform.position = targetPositions[0];
-
-		print("Start: " + agent.transform.ToString() + " End: " + target.transform.ToString());
-
-		aStar.Setup(agent.transform.position, target.transform.position);
-		if(aStar.CalculatePath()) {
-			print("YEY!!!");
+		Stopwatch frameWatch = System.Diagnostics.Stopwatch.StartNew();
+		
+		if(simulationsRunSoFar < numberOfSimulations) {
+			while(simulationsRunSoFar < numberOfSimulations && frameWatch.ElapsedMilliseconds < 1) {
+				agent.transform.position = startPositions[simulationsRunSoFar];
+				target.transform.position = targetPositions[simulationsRunSoFar];
+				
+				builtInSimulationTimer.Start();
+				NavMeshPath path = new NavMeshPath();
+				if(agent.CalculatePath(target.position, path)) {
+//					print("Found built in.");
+					//print("Path calculated between " + startPositions[simulationsRunSoFar].ToString() + " and " + targetPositions[simulationsRunSoFar].ToString() + "!");
+				} else {
+//					print("Not found built in.");
+					//print("Path could not be found between " + startPositions[simulationsRunSoFar].ToString() + " and " + targetPositions[simulationsRunSoFar].ToString() + "!");
+				}
+				builtInSimulationTimer.Stop();
+				
+				++simulationsRunSoFar;
+			}
 		} else {
-			print("NEY!!!");
+			builtInSimulatorFinished = true;
+			simulationsRunSoFar = 0;
+		}
+	}
+
+	void runAStarSimulationOnTiled() {
+		Stopwatch frameWatch = System.Diagnostics.Stopwatch.StartNew();
+
+		if(simulationsRunSoFar < numberOfSimulations) {
+			while(simulationsRunSoFar < numberOfSimulations && frameWatch.ElapsedMilliseconds < 1) {
+				agent.transform.position = startPositions[simulationsRunSoFar];
+				target.transform.position = targetPositions[simulationsRunSoFar];
+
+				aStarSingleThreadedSimulationTimer.Start();
+				aStar.Setup(agent.transform.position, target.transform.position);
+				if(aStar.CalculatePath()) {
+//					print("Found aStar.");
+				} else {
+//					print("Not found aStar.");
+				}
+				aStarSingleThreadedSimulationTimer.Stop();
+
+				++simulationsRunSoFar;				
+			}
+		} else {
+			aStarSingleThreadedFinished = true;
+			simulationsRunSoFar = 0;
 		}
 	}
 

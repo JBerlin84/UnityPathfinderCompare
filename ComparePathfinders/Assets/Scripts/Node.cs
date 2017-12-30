@@ -21,6 +21,8 @@ class Node : IComparable {
 	int y;
 	public int Y { get { return y; } }
 
+	public float Elevation{ get {return position3D.y; } }
+
 	public Node(Vector3 position3D) {
 		neighbors = new ArrayList();
 
@@ -39,7 +41,7 @@ class Node : IComparable {
 	int IComparable.CompareTo(object obj) {
 		if(fScore < (obj as Node).FScore) {
 			return -1;
-		} else if(fScore < (obj as Node).FScore) {
+		} else if(fScore > (obj as Node).FScore) {		// TODO: Changed this comparison from < to >. Bug?? Make sure it works!!!
 			return 1;
 		} else {
 			return 0;
