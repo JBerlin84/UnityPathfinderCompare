@@ -9,10 +9,11 @@ public class NavSimulation : MonoBehaviour {
 	public NavMeshAgent agent;
 	public Transform target;
 	public WorldGenerator worldGenerator;
+	public WorldGeneratorTiled worldGeneratorTiled;
 
 	public int seed = 0;
 
-	float[,] world;
+	int[,] world;
 
 	public int numberOfSimulations;
 	private Vector3[] startPositions;
@@ -33,14 +34,16 @@ public class NavSimulation : MonoBehaviour {
 	void Start() {
 
 		Random.InitState(seed);
-		world = worldGenerator.World;
+		world = worldGeneratorTiled.World;
 		aStar = new AStarPathfinder(world);
 		
 		prepareSimulations(world.GetLength(0), world.GetLength(1));
 	}
 
 	void Update() {
-		if(!builtInSimulatorFinished) {
+		runBuiltInSimulationOnTiled();
+
+		/*if(!builtInSimulatorFinished) {
 			runBuiltInSimulation();
 		} else if (!aStarSingleThreadedFinished) {
 			runAStarSingleThreadedSimulation();
@@ -49,6 +52,20 @@ public class NavSimulation : MonoBehaviour {
 		if(builtInSimulatorFinished && aStarSingleThreadedFinished) {
 			print("The built in simulation took: " + builtInSimulationTimer.ElapsedTicks + " ticks. (" + builtInSimulationTimer.ElapsedMilliseconds + " ms)\n" + 
 					"The A* single threaded simulation took: " + aStarSingleThreadedSimulationTimer.ElapsedTicks + " ticks. (" + aStarSingleThreadedSimulationTimer.ElapsedMilliseconds + " ms)");
+		}*/
+	}
+
+	void runBuiltInSimulationOnTiled() {
+		agent.transform.position = startPositions[0];
+		target.transform.position = targetPositions[0];
+
+		print("Start: " + agent.transform.ToString() + " End: " + target.transform.ToString());
+
+		aStar.Setup(agent.transform.position, target.transform.position);
+		if(aStar.CalculatePath()) {
+			print("YEY!!!");
+		} else {
+			print("NEY!!!");
 		}
 	}
 

@@ -19,7 +19,22 @@ public class AStarPathfinder {
 
 	int totalLookupsInCalculate = 0;
 
+	public AStarPathfinder(int[,] world) {
+		float[,] tempWorld = new float[world.GetLength(0), world.GetLength(1)];
+		for(int x=0;x<world.GetLength(0); x++) {
+			for(int y=0;y<world.GetLength(1);y++) {
+				tempWorld[x,y] = (float)world[x,y];
+			}
+		}
+
+		PreConfig(tempWorld);
+	}
+
 	public AStarPathfinder(float[,] world) {
+		PreConfig(world);
+	}
+
+	private void PreConfig(float[,] world) {
 		xDim = world.GetLength(0);
 		yDim = world.GetLength(1);
 
@@ -37,13 +52,13 @@ public class AStarPathfinder {
 		// TODO: Do i want this here or in Node?
 		for(int x=0;x<xDim;x++) {
 			for(int y=0;y<yDim;y++) {
-				if(x>0)
+				if(x>0 && map[x-1,y].Y == 1f)
 					map[x,y].AddNeighbor(map[x-1,y]);
-				if(x<xDim-1)
+				if(x<xDim-1 && map[x+1,y].Y == 1f)
 					map[x,y].AddNeighbor(map[x+1,y]);
-				if(y>0)
+				if(y>0 && map[x,y-1].Y == 1f)
 					map[x,y].AddNeighbor(map[x,y-1]);
-				if(y<yDim-1)
+				if(y<yDim-1 && map[x,y+1].Y == 1f)
 					map[x,y].AddNeighbor(map[x,y+1]);
 			}
 		}
