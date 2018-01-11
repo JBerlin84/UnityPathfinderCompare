@@ -1,7 +1,6 @@
 ﻿//using System.Diagnostics;
 using System;
 using UnityEngine;
-using Microsoft.VisualBasic;
 
 public class ComputerInformation : MonoBehaviour {
 

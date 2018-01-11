@@ -225,6 +225,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a35cd9a6ceb00e24ea82107817a5a57d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  simulator: {fileID: 1306501906}
+  recordFrequency: 0.1
   baseLineTest: 5
 --- !u!4 &504025372
 Transform:
