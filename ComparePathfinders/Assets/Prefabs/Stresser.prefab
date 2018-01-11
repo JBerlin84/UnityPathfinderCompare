@@ -270,7 +270,7 @@ Transform:
   m_GameObject: {fileID: 1052571330033726}
   m_LocalRotation: {x: -0, y: 0.19585136, z: -0, w: 0.9806336}
   m_LocalPosition: {x: 0, y: -3.85, z: -20.78}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 4453577735855540}
   - {fileID: 4152083574100544}
@@ -921,4 +921,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   box: {fileID: 1970726623127676, guid: cba4216b1158e2e479dcb1bc54b4628d, type: 2}
-  boxCount: 500
+  boxCount: 2500
+  boxScale: 0.4
