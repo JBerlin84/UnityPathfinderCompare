@@ -34,8 +34,10 @@ public class NavSimulation : MonoBehaviour {
 
 	AStarPathfinder aStar;
 
-	void Start() {
+	bool baseline;	// TODO: This should be the game state, not baseline
 
+	void Start() {
+		baseline = true;
 		Random.InitState(seed);
 		world = worldGeneratorTiled.World;
 		aStar = new AStarPathfinder(world);
@@ -44,13 +46,14 @@ public class NavSimulation : MonoBehaviour {
 	}
 
 	void Update() {
-		if(!builtInSimulatorFinished)
+
+		if(baseline)
+			;
+		else if(!builtInSimulatorFinished)
 			runBuiltInSimulationOnTiled();
 		else if(!aStarSingleThreadedFinished)
 			runAStarSimulationOnTiled();
-		
-
-		if(builtInSimulatorFinished /*&& aStarSingleThreadedFinished*/) {
+		else if(builtInSimulatorFinished /*&& aStarSingleThreadedFinished*/) {
 			//print("The built in simulation took: " + builtInSimulationTimer.ElapsedTicks + " ticks. (" + builtInSimulationTimer.ElapsedMilliseconds + " ms)\n" + 
 			//		"The A* single threaded simulation took: " + aStarSingleThreadedSimulationTimer.ElapsedTicks + " ticks. (" + aStarSingleThreadedSimulationTimer.ElapsedMilliseconds + " ms)");
 			print("finished");
@@ -142,5 +145,10 @@ public class NavSimulation : MonoBehaviour {
 				targetPositions[i,j] = new Vector3(x, 0, z);
 			}
 		}
+	}
+
+	// TODO: This should take the state.
+	public void SetState() {
+		baseline = false;
 	}
 }

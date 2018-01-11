@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(FPSCounter))]
 public class TestManager : MonoBehaviour {
 
+	public NavSimulation simulator;
+
 	private enum State {
 		BASE_LINE,
 		BUILT_IN_PATHFINDER,
@@ -48,6 +50,7 @@ public class TestManager : MonoBehaviour {
 		if(currentState == State.BASE_LINE && Time.time > baseLineTestTime) {
 			print("We no longer do the base line test.");
 			currentState = State.BUILT_IN_PATHFINDER;
+			simulator.SetState();
 		}
 	}
 }
