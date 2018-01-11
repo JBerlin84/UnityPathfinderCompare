@@ -924,4 +924,4 @@ MonoBehaviour:
   boxCount: 2600
   boxScale: {x: 0.4, y: 0.4, z: 0.4}
   randomizeScale: 1
-  randomRange: 0.1
+  randomRange: 0.2
