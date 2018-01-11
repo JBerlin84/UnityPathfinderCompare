@@ -16,8 +16,6 @@ public class ComputerInformation : MonoBehaviour {
 	string graphicsDeviceType;
 	string graphicsMemorySize;
 
-//	static Process currentProcess = System.Diagnostics.Process.GetCurrentProcess();
-
 	private float time;
 	public float measureFrequency = 1;
 
@@ -49,10 +47,4 @@ public class ComputerInformation : MonoBehaviour {
 						"Graphics memory size: " + graphicsMemorySize + "\n"; 					
 		return reply;
 	}
-
-
-/*	public string printMeasurementStatistics() {
-		string reply = "Memory used: " + currentProcess.WorkingSet64;
-		return reply;
-	}*/
 }

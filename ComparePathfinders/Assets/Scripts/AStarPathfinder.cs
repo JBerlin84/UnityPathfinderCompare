@@ -50,19 +50,6 @@ public class AStarPathfinder {
 		// Adds all the neighbors.
 		// TODO: This needs to be better. Only adds fourn eighbors now.
 		// TODO: Do i want this here or in Node?
-		/*
-		for(int x=0;x<xDim;x++) {
-			for(int y=0;y<yDim;y++) {
-				if(x>0 && map[x-1,y].Y == 1f)
-					map[x,y].AddNeighbor(map[x-1,y]);
-				if(x<xDim-1 && map[x+1,y].Y == 1f)
-					map[x,y].AddNeighbor(map[x+1,y]);
-				if(y>0 && map[x,y-1].Y == 1f)
-					map[x,y].AddNeighbor(map[x,y-1]);
-				if(y<yDim-1 && map[x,y+1].Y == 1f)
-					map[x,y].AddNeighbor(map[x,y+1]);
-			}
-		}*/
 
 		// TODO: Some cleanup here!
 		for(int x=0;x<xDim;x++) {
