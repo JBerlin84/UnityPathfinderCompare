@@ -1,5 +1,7 @@
-﻿using UnityEngine;
-using System.Diagnostics;
+﻿//using System.Diagnostics;
+using System;
+using UnityEngine;
+using Microsoft.VisualBasic;
 
 public class ComputerInformation : MonoBehaviour {
 
@@ -14,7 +16,7 @@ public class ComputerInformation : MonoBehaviour {
 	string graphicsDeviceType;
 	string graphicsMemorySize;
 
-	Process currentProcess = System.Diagnostics.Process.GetCurrentProcess();
+//	static Process currentProcess = System.Diagnostics.Process.GetCurrentProcess();
 
 	private float time;
 	public float measureFrequency = 1;
@@ -32,14 +34,6 @@ public class ComputerInformation : MonoBehaviour {
 		graphicsMemorySize = SystemInfo.graphicsMemorySize.ToString();
 
 		print(ToString());
-		time = Time.time;
-	}
-
-	void Update() {
-		if(Time.time > time + 1) {
-			print(printMeasurementStatistics());
-			time = Time.time;
-		}
 	}
 
 	public override string ToString() {
@@ -56,8 +50,9 @@ public class ComputerInformation : MonoBehaviour {
 		return reply;
 	}
 
-	public string printMeasurementStatistics() {
+
+/*	public string printMeasurementStatistics() {
 		string reply = "Memory used: " + currentProcess.WorkingSet64;
 		return reply;
-	}
+	}*/
 }
