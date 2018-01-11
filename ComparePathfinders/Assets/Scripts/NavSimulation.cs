@@ -15,14 +15,18 @@ public class NavSimulation : MonoBehaviour {
 	int[,] world;
 
 	public int numberOfSimulations;
-	private Vector3[] startPositions;
-	private Vector3[] targetPositions;
+	public int numberOfSimultaneousAgents;
+	private Vector3[,] startPositions;
+	private Vector3[,] targetPositions;
+
+	private NavMeshAgent[] agents;
+	private Transform[] targets;
+
 	// Use this for initialization
 
 	Stopwatch builtInSimulationTimer = new System.Diagnostics.Stopwatch();
 	Stopwatch aStarSingleThreadedSimulationTimer = new System.Diagnostics.Stopwatch();
 	
-	Stopwatch aStarSingleThreadedSimulationTimerOLD = new System.Diagnostics.Stopwatch();
 	int simulationsRunSoFar = 0;
 
 	bool builtInSimulatorFinished = false;
@@ -40,14 +44,16 @@ public class NavSimulation : MonoBehaviour {
 	}
 
 	void Update() {
-		if(!aStarSingleThreadedFinished)
-			runAStarSimulationOnTiled();
-		else if(!builtInSimulatorFinished)
+		if(!builtInSimulatorFinished)
 			runBuiltInSimulationOnTiled();
+		else if(!aStarSingleThreadedFinished)
+			runAStarSimulationOnTiled();
+		
 
-		if(builtInSimulatorFinished && aStarSingleThreadedFinished) {
-			print("The built in simulation took: " + builtInSimulationTimer.ElapsedTicks + " ticks. (" + builtInSimulationTimer.ElapsedMilliseconds + " ms)\n" + 
-					"The A* single threaded simulation took: " + aStarSingleThreadedSimulationTimer.ElapsedTicks + " ticks. (" + aStarSingleThreadedSimulationTimer.ElapsedMilliseconds + " ms)");
+		if(builtInSimulatorFinished /*&& aStarSingleThreadedFinished*/) {
+			//print("The built in simulation took: " + builtInSimulationTimer.ElapsedTicks + " ticks. (" + builtInSimulationTimer.ElapsedMilliseconds + " ms)\n" + 
+			//		"The A* single threaded simulation took: " + aStarSingleThreadedSimulationTimer.ElapsedTicks + " ticks. (" + aStarSingleThreadedSimulationTimer.ElapsedMilliseconds + " ms)");
+			print("finished");
 		}
 	}
 
@@ -56,23 +62,27 @@ public class NavSimulation : MonoBehaviour {
 		Stopwatch frameWatch = System.Diagnostics.Stopwatch.StartNew();
 		
 		if(simulationsRunSoFar < numberOfSimulations) {
-			while(simulationsRunSoFar < numberOfSimulations && frameWatch.ElapsedMilliseconds < 1) {
-				agent.transform.position = startPositions[simulationsRunSoFar];
-				target.transform.position = targetPositions[simulationsRunSoFar];
+			//while(simulationsRunSoFar < numberOfSimulations && frameWatch.ElapsedMilliseconds < 1) {
+			for(int i=0;i<numberOfSimultaneousAgents;i++) {
+				agents[i].transform.position = startPositions[i,simulationsRunSoFar];
+				targets[i].transform.position = targetPositions[i,simulationsRunSoFar];
+				//agent.transform.position = startPositions[i,simulationsRunSoFar];
+				//target.transform.position = targetPositions[i,simulationsRunSoFar];
 				
-				builtInSimulationTimer.Start();
+				//builtInSimulationTimer.Start();
 				NavMeshPath path = new NavMeshPath();
-				if(agent.CalculatePath(target.position, path)) {
+				if(agents[i].CalculatePath(target.position, path)) {
 //					print("Found built in.");
 					//print("Path calculated between " + startPositions[simulationsRunSoFar].ToString() + " and " + targetPositions[simulationsRunSoFar].ToString() + "!");
 				} else {
 //					print("Not found built in.");
 					//print("Path could not be found between " + startPositions[simulationsRunSoFar].ToString() + " and " + targetPositions[simulationsRunSoFar].ToString() + "!");
 				}
-				builtInSimulationTimer.Stop();
+				//builtInSimulationTimer.Stop();
 				
-				++simulationsRunSoFar;
+//				++simulationsRunSoFar;
 			}
+			++simulationsRunSoFar;
 		} else {
 			builtInSimulatorFinished = true;
 			simulationsRunSoFar = 0;
@@ -83,21 +93,25 @@ public class NavSimulation : MonoBehaviour {
 		Stopwatch frameWatch = System.Diagnostics.Stopwatch.StartNew();
 
 		if(simulationsRunSoFar < numberOfSimulations) {
-			while(simulationsRunSoFar < numberOfSimulations && frameWatch.ElapsedMilliseconds < 1) {
-				agent.transform.position = startPositions[simulationsRunSoFar];
-				target.transform.position = targetPositions[simulationsRunSoFar];
+			//while(simulationsRunSoFar < numberOfSimulations && frameWatch.ElapsedMilliseconds < 1) {
+			for(int i=0;i<numberOfSimultaneousAgents;i++) {
+				agents[i].transform.position = startPositions[i,simulationsRunSoFar];
+				targets[i].transform.position = targetPositions[i,simulationsRunSoFar];
+				//agent.transform.position = startPositions[0,simulationsRunSoFar];
+				//target.transform.position = targetPositions[0,simulationsRunSoFar];
 
-				aStarSingleThreadedSimulationTimer.Start();
-				aStar.Setup(agent.transform.position, target.transform.position);
+				//aStarSingleThreadedSimulationTimer.Start();
+				aStar.Setup(agents[i].transform.position, targets[i].transform.position);
 				if(aStar.CalculatePath()) {
 //					print("Found aStar.");
 				} else {
 //					print("Not found aStar.");
 				}
-				aStarSingleThreadedSimulationTimer.Stop();
+				//aStarSingleThreadedSimulationTimer.Stop();
 
-				++simulationsRunSoFar;				
+				//++simulationsRunSoFar;
 			}
+			++simulationsRunSoFar;
 		} else {
 			aStarSingleThreadedFinished = true;
 			simulationsRunSoFar = 0;
@@ -105,19 +119,28 @@ public class NavSimulation : MonoBehaviour {
 	}
 
 	void prepareSimulations(int xSize, int zSize) {
-		startPositions = new Vector3[numberOfSimulations];
-		targetPositions = new Vector3[numberOfSimulations];
+		startPositions = new Vector3[numberOfSimultaneousAgents, numberOfSimulations];
+		targetPositions = new Vector3[numberOfSimultaneousAgents, numberOfSimulations];
+		agents = new NavMeshAgent[numberOfSimultaneousAgents];
+		targets = new Transform[numberOfSimultaneousAgents];
 
-		for(int i=0;i<numberOfSimulations;i++) {
-			// Start
-			int x = Random.Range(0, xSize-1);
-			int z = Random.Range(0, zSize-1);
-			startPositions[i] = new Vector3(x, world[x,z], z);
+		for(int i=0;i<numberOfSimultaneousAgents;i++) {
+			agents[i] = Instantiate(agent);
+			targets[i] = Instantiate(target);
+		}
 
-			// Target
-			x = Random.Range(0, xSize-1);
-			z = Random.Range(0, zSize-1);
-			targetPositions[i] = new Vector3(x, world[x,z], z);
+		for(int i=0;i<numberOfSimultaneousAgents;i++) {
+			for(int j=0;j<numberOfSimulations;j++) {
+				// Start
+				int x = Random.Range(0, xSize-1);
+				int z = Random.Range(0, zSize-1);
+				startPositions[i,j] = new Vector3(x, 0, z);
+
+				// Target
+				x = Random.Range(0, xSize-1);
+				z = Random.Range(0, zSize-1);
+				targetPositions[i,j] = new Vector3(x, 0, z);
+			}
 		}
 	}
 }
