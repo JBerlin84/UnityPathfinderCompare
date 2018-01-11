@@ -8,7 +8,9 @@ public class Stresser : MonoBehaviour {
 
 	public GameObject box;
 	public int boxCount;
-	public float boxScale;
+	public Vector3 boxScale;
+	public bool randomizeScale;
+	public float randomRange;
 
 	// Use this for initialization
 	void Start () {
@@ -16,8 +18,11 @@ public class Stresser : MonoBehaviour {
 		for(int i=0;i<boxCount;i++) {
 			Vector3 spawnPos = new Vector3(position.x+Random.Range(-4,4), position.y+Random.Range(-4,4), position.z+Random.Range(-4,4));
 			GameObject newBox = Instantiate(box, spawnPos, Quaternion.identity);
-			newBox.transform.localScale = new Vector3(boxScale, boxScale, boxScale);
 
+			float xSize = randomizeScale ? boxScale.x + Random.Range(-randomRange, randomRange): boxScale.x;
+			float ySize = randomizeScale ? boxScale.y + Random.Range(-randomRange, randomRange): boxScale.y;
+			float zSize = randomizeScale ? boxScale.z + Random.Range(-randomRange, randomRange): boxScale.z;
+			newBox.transform.localScale = new Vector3(xSize, ySize, zSize);
 		}
 	}
 	
