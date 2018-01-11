@@ -116,6 +116,9 @@ public class NavSimulation : MonoBehaviour {
 		}
 	}
 
+
+
+/*
 	void runAStarSingleThreadedSimulation() {
 		Stopwatch frameWatch = System.Diagnostics.Stopwatch.StartNew();
 
@@ -165,7 +168,7 @@ public class NavSimulation : MonoBehaviour {
 			simulationsRunSoFar = 0;
 		}
 	}
-
+*/
 	void prepareSimulations(int xSize, int zSize) {
 		startPositions = new Vector3[numberOfSimulations];
 		targetPositions = new Vector3[numberOfSimulations];
