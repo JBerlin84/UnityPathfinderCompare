@@ -490,7 +490,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1306501905}
-  - component: {fileID: 1306501904}
   - component: {fileID: 1306501906}
   m_Layer: 0
   m_Name: PathfinderManager
@@ -499,18 +498,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1306501904
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1306501903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9564d121517068f4fa0648fe7eff44de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  measureFrequency: 1
 --- !u!4 &1306501905
 Transform:
   m_ObjectHideFlags: 0
@@ -539,8 +526,8 @@ MonoBehaviour:
   target: {fileID: 4035874747430868, guid: cbe7a39ae94a2284e82fdd836a73b019, type: 2}
   worldGeneratorTiled: {fileID: 595766017}
   seed: 0
-  numberOfSimulations: 50
-  numberOfSimultaneousAgents: 25
+  numberOfSimulations: 500
+  numberOfSimultaneousAgents: 100
 --- !u!1001 &1545298474
 Prefab:
   m_ObjectHideFlags: 0
@@ -579,6 +566,11 @@ Prefab:
     - target: {fileID: 4363530765761482, guid: 2dbcc61d15c423c40afb2b2697df618c, type: 2}
       propertyPath: m_RootOrder
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114640483827735340, guid: 2dbcc61d15c423c40afb2b2697df618c,
+        type: 2}
+      propertyPath: boxCount
+      value: 2000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2dbcc61d15c423c40afb2b2697df618c, type: 2}
@@ -711,7 +703,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1363947049
+  randomSeed: -389404065
   InitialModule:
     serializedVersion: 3
     enabled: 1
