@@ -77,7 +77,7 @@ public class NavSimulation : MonoBehaviour {
 			//print("The built in simulation took: " + builtInSimulationTimer.ElapsedTicks + " ticks. (" + builtInSimulationTimer.ElapsedMilliseconds + " ms)\n" + 
 			//		"The A* single threaded simulation took: " + aStarSingleThreadedSimulationTimer.ElapsedTicks + " ticks. (" + aStarSingleThreadedSimulationTimer.ElapsedMilliseconds + " ms)");
 
-			testManager.SetState(gameState);
+//			testManager.SetState(gameState);
 			Destroy(gameObject); // TODO: Should we do this just for fun? :P
 		}
 	}
@@ -112,7 +112,7 @@ public class NavSimulation : MonoBehaviour {
 			//builtInSimulatorFinished = true;
 			//gameState = GameState.A_STAR_PATH_FINDER_SINGLE_THREAD;
 			gameState = GameState.A_STAR_PATH_FINDER_MULTI_THREAD;
-			testManager.SetState(gameState);
+//			testManager.SetState(gameState);
 			simulationsRunSoFar = 0;
 		}
 	}
@@ -145,7 +145,7 @@ public class NavSimulation : MonoBehaviour {
 			//gameState = GameState.A_STAR_PATH_FINDER_MULTI_THREAD;
 			// TODO: Multithreaded here.
 			gameState = GameState.A_STAR_PATH_FINDER_MULTI_THREAD;
-			testManager.SetState(gameState);
+//			testManager.SetState(gameState);
 			simulationsRunSoFar = 0;
 		}
 	}
@@ -186,7 +186,7 @@ public class NavSimulation : MonoBehaviour {
 			//gameState = GameState.A_STAR_PATH_FINDER_MULTI_THREAD;
 			// TODO: Multithreaded here.
 			gameState = GameState.CLEAN_UP;
-			testManager.SetState(gameState);
+//			testManager.SetState(gameState);
 			simulationsRunSoFar = 0;
 		}
 	}

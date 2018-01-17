@@ -921,7 +921,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   box: {fileID: 1970726623127676, guid: cba4216b1158e2e479dcb1bc54b4628d, type: 2}
-  boxCount: 2600
+  boxCount: 2000
   boxScale: {x: 0.4, y: 0.4, z: 0.4}
   randomizeScale: 1
   randomRange: 0.2
