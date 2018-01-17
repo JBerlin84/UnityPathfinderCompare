@@ -10,7 +10,8 @@ public class TestManager : MonoBehaviour {
 	private FPSCounter fpsCounter;
 	private ComputerInformation computerInformation;
 	private GameState gameState;
-	private Stresser stressLoaderGameObject = null;
+	private Stresser stressLoader = null;
+	new private ParticleSystem particleSystem = null;
 
 	// Helper objects
 	private TestData testData = new TestData();
@@ -25,9 +26,16 @@ public class TestManager : MonoBehaviour {
 
 	[Header("Game objects")]
 	public NavSimulation navigationSimulator;
-	public Vector3 navigationSimulatorSpawnPosition;
-	public Stresser stressLoader;
+	[Space]
+	public Stresser stressLoaderPrefab;
 	public Vector3 stressLoaderSpawnPosition;
+	public Vector3 stressLoaderSpawnRotation;
+	[Space]
+	public ParticleSystem particleSystemPrefab;
+	public Vector3 particleSystemSpawnPosition;
+	public Vector3 particleSystemSpawnRotation;
+	
+
 
 	[Header("Test state settings")]
 	public SimulationStateSettings[] settings = new SimulationStateSettings[4];
@@ -42,12 +50,20 @@ public class TestManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		stressLoader = Instantiate(stressLoaderPrefab, stressLoaderSpawnPosition, Quaternion.identity) as Stresser;
+		stressLoader.gameObject.SetActive(false);
+		particleSystem = Instantiate(particleSystemPrefab, particleSystemSpawnPosition, Quaternion.identity) as ParticleSystem;
+		particleSystem.gameObject.SetActive(false);
+
 		// nextRecordTime = Time.time + recordFrequency;
 		// baseLineTest = Time.time + gameStateTime;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		
+
+
 		// if(Time.time >= nextRecordTime) {
 		// 	int fps = fpsCounter.getFPS();
 		// 	// testData.BaselineFPS.Add(fps);	// TODO: Make sure were recording the data in the correct place.

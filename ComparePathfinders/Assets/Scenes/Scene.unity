@@ -190,13 +190,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 467122188}
-  m_LocalRotation: {x: 0.18608455, y: -0.7422547, z: 0.2295754, w: 0.6014364}
-  m_LocalPosition: {x: 32.882744, y: 17.276583, z: 3.8565807}
+  m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
+  m_LocalPosition: {x: 0, y: 20, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 40, y: 0, z: 0}
 --- !u!1 &504025370
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,18 +225,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a35cd9a6ceb00e24ea82107817a5a57d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameStateTime: 0
+  gameStateTime: 5
   recordFrequency: 0.1
-  navigationSimulator: {fileID: 0}
-  navigationSimulatorSpawnPosition: {x: 0, y: 0, z: 0}
-  stressLoader: {fileID: 114640483827735340, guid: 2dbcc61d15c423c40afb2b2697df618c,
+  navigationSimulator: {fileID: 595766019}
+  stressLoaderPrefab: {fileID: 114640483827735340, guid: 2dbcc61d15c423c40afb2b2697df618c,
     type: 2}
-  stressLoaderSpawnPosition: {x: 0, y: 0, z: 0}
+  stressLoaderSpawnPosition: {x: -25, y: 0, z: 20}
+  stressLoaderSpawnRotation: {x: 0, y: 0, z: 0}
+  particleSystemPrefab: {fileID: 198707908322458936, guid: 4015a4ce1218c2745b5c1c70202c8e76,
+    type: 2}
+  particleSystemSpawnPosition: {x: 25, y: 0, z: 20}
+  particleSystemSpawnRotation: {x: 0, y: 0, z: 0}
   settings:
   - settingsName: Light load
-    useStressLoader: 0
+    useStressLoader: 1
     stressLoaderMagnitude: 0
-    useParticleSystem: 0
+    useParticleSystem: 1
     particleSystemMagnitude: 0
   - settingsName: Medium load
     useStressLoader: 1
@@ -260,7 +264,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 504025370}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.4653053, y: 3.1878548, z: -1.7964435}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -289,7 +293,7 @@ GameObject:
   - component: {fileID: 595766019}
   m_Layer: 0
   m_Name: Pathfinder
-  m_TagString: Untagged
+  m_TagString: NavigationSimulator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -340,8 +344,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 195778988505953796, guid: 20cb52f750ede9e428bb42a4be260389, type: 2}
   target: {fileID: 4035874747430868, guid: cbe7a39ae94a2284e82fdd836a73b019, type: 2}
-  worldGeneratorTiled: {fileID: 0}
   seed: 0
+  randomize: 0
   numberOfSimulations: 500
   numberOfSimultaneousAgents: 100
 --- !u!1 &769100640
@@ -465,8 +469,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 195778988505953796, guid: 20cb52f750ede9e428bb42a4be260389, type: 2}
   target: {fileID: 4035874747430868, guid: cbe7a39ae94a2284e82fdd836a73b019, type: 2}
-  worldGeneratorTiled: {fileID: 595766017}
   seed: 0
+  randomize: 0
   numberOfSimulations: 500
   numberOfSimultaneousAgents: 100
 --- !u!1 &2115342634
