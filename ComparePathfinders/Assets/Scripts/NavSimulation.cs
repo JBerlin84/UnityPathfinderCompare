@@ -5,13 +5,21 @@ using UnityEngine.AI;
 using System.Diagnostics;
 using System.Threading;
 
+[RequireComponent(typeof(WorldGeneratorTiled))]
 public class NavSimulation : MonoBehaviour {
+
+	
+	[Header("Remember to have a properly baked navigation mesh floor\n when using this script!!")]
+	
+	[Space]
+	[Space]
 
 	public NavMeshAgent agent;
 	public Transform target;
-	public WorldGeneratorTiled worldGeneratorTiled;
+	private WorldGeneratorTiled worldGeneratorTiled;
 
 	public int seed = 0;
+	public bool randomize;
 
 	int[,] world;
 
@@ -44,9 +52,17 @@ public class NavSimulation : MonoBehaviour {
 	int index;
 	int coreCount;
 
+	void Awake() {
+		worldGeneratorTiled = GetComponent(typeof(WorldGeneratorTiled)) as WorldGeneratorTiled;
+	}
+
 	void Start() {
+		if(randomize) {
+			Random.InitState((int)System.DateTime.Now.Ticks);
+		} else {
+			Random.InitState(seed.GetHashCode());
+		}
 		gameState = GameState.BASE_LINE;
-		Random.InitState(seed);
 		world = worldGeneratorTiled.World;
 		aStar = new AStarPathfinder(world);
 		testManager = GameObject.FindObjectOfType<TestManager>();
