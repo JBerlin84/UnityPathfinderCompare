@@ -124,7 +124,7 @@ public class NavSimulation : MonoBehaviour {
 		}
 
 		// Actual calculation
-		index = 0;
+		index = -1;
 		// Start threads
 		Thread[] thread = new Thread[coreCount];
 		for(int i=0;i<coreCount;i++) {
@@ -133,26 +133,20 @@ public class NavSimulation : MonoBehaviour {
 		}
 		// Join threads. (Could be omitted if we were sure the computer could handle it.)
 		// There is a bug here preventing me form joining. Probably while down below. Some threads never reach index = number of simultaneous agents.
-		// for(int i=0;i<coreCount;i++) {
-		// 	thread[i].Join();
-		// }
+//		for(int i=0;i<coreCount;i++) {
+//		 	thread[i].Join();
+//		}
 		++simulationsRunSoFar;
 		simulationsRunSoFar %= numberOfSimulations;
 	}
 
 	void MultiThreadHelperFunction() {
-		while(index < numberOfSimultaneousAgents) {
-			int i=0;
-			indexSemaphore.WaitOne();
-			i = index++;
-			if(index >= numberOfSimultaneousAgents) {
-				indexSemaphore.Release();
-				break;
-			}
-			indexSemaphore.Release();
-
+		int i = Interlocked.Increment(ref index);
+		while(i < numberOfSimultaneousAgents) {
 			aStars[i].Setup(startPositions[i,simulationsRunSoFar], targetPositions[i,simulationsRunSoFar]);
 			aStars[i].CalculatePath();
+
+			i = Interlocked.Increment(ref index);
 		}
 	}
 
@@ -171,13 +165,13 @@ public class NavSimulation : MonoBehaviour {
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
 			for(int j=0;j<numberOfSimulations;j++) {
 				// Start
-				int x = Random.Range(0, xSize-1) - xSize/2;
-				int z = Random.Range(0, zSize-1) - zSize/2;
+				int x = Random.Range(0, xSize-1);// - xSize/2;
+				int z = Random.Range(0, zSize-1);// - zSize/2;
 				startPositions[i,j] = new Vector3(x, 0, z);
 
 				// Target
-				x = Random.Range(0, xSize-1) - xSize/2;
-				z = Random.Range(0, zSize-1) - zSize/2;
+				x = Random.Range(0, xSize-1);// - xSize/2;
+				z = Random.Range(0, zSize-1);// - zSize/2;
 				targetPositions[i,j] = new Vector3(x, 0, z);
 			}
 		}

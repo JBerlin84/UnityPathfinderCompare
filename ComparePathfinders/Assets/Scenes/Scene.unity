@@ -472,7 +472,7 @@ MonoBehaviour:
   seed: 0
   randomize: 0
   numberOfSimulations: 500
-  numberOfSimultaneousAgents: 100
+  numberOfSimultaneousAgents: 10
 --- !u!1 &2115342634
 GameObject:
   m_ObjectHideFlags: 0
