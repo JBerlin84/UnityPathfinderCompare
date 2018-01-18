@@ -145,6 +145,10 @@ public class NavSimulation : MonoBehaviour {
 			int i=0;
 			indexSemaphore.WaitOne();
 			i = index++;
+			if(index >= numberOfSimultaneousAgents) {
+				indexSemaphore.Release();
+				break;
+			}
 			indexSemaphore.Release();
 
 			aStars[i].Setup(startPositions[i,simulationsRunSoFar], targetPositions[i,simulationsRunSoFar]);
