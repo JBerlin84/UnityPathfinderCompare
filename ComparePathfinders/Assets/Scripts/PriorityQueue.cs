@@ -28,8 +28,6 @@ public class PriorityQueue<T> where T : IComparable{
 		++count;
 
 		BubbleUp();
-		
-		Debug.Log(ToString());
 	}
 
 	public T Remove() {
@@ -38,8 +36,6 @@ public class PriorityQueue<T> where T : IComparable{
 		--count;
 		drippleDown();
 		
-		Debug.Log(ToString());
-
 		return head;
 	}
 
@@ -92,5 +88,15 @@ public class PriorityQueue<T> where T : IComparable{
 				 break;
 			 }
 		}
+	}
+
+	// Wounder if this work
+	public bool Contains(T o) {
+		for(int i=0;i<count;i++) {
+			if(list[i].Equals(o)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

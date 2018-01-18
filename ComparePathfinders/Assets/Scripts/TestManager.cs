@@ -25,6 +25,7 @@ public class TestManager : MonoBehaviour {
 	[Header("Global settings")]
 	public float gameStateTime;
 	public float recordFrequency;
+	public int threadMultiplier = 1;
 
 	[Header("Game objects")]
 	public NavSimulation navigationSimulator;

@@ -41,7 +41,7 @@ public class NavSimulation : MonoBehaviour {
 	private GameState gameState;
 
 	Semaphore indexSemaphore;
-	int index;
+	int threadIndex;
 	int coreCount;
 
 	void Awake() {
@@ -57,7 +57,7 @@ public class NavSimulation : MonoBehaviour {
 		//gameState = GameState.BASE_LINE;
 		world = worldGeneratorTiled.World;
 		aStar = new AStarPathfinder(world);
-		coreCount = SystemInfo.processorCount*2;
+		coreCount = SystemInfo.processorCount;
 
 		aStars = new AStarPathfinder[numberOfSimultaneousAgents];
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
@@ -124,14 +124,13 @@ public class NavSimulation : MonoBehaviour {
 		}
 
 		// Actual calculation
-		index = 0;
+		threadIndex = -1;
 		// Start threads
 		Thread[] thread = new Thread[coreCount];
 		for(int i=0;i<coreCount;i++) {
 			thread[i] = new Thread(new ThreadStart(MultiThreadHelperFunction));
 			thread[i].Start();
 		}
-		print(thread.Length + " threads started");
 		// Join threads. (Could be omitted if we were sure the computer could handle it.)
 		// There is a bug here preventing me form joining. Probably while down below. Some threads never reach index = number of simultaneous agents.
 		for(int i=0;i<coreCount;i++) {
@@ -145,16 +144,27 @@ public class NavSimulation : MonoBehaviour {
 	}
 
 	void MultiThreadHelperFunction() {
-		int i = Interlocked.Increment(ref index);
+		int myIndex = Interlocked.Increment(ref threadIndex);
+
+		int range = numberOfSimultaneousAgents / coreCount;
+		int min = range*myIndex;
+		int max = min + range;
+
+		for(int i=min;i<max;i++) {
+			aStars[i].Setup(startPositions[i,simulationsRunSoFar], targetPositions[i,simulationsRunSoFar]);
+			aStars[i].CalculatePath();
+		}
+
+		//print("My index is: " + myIndex);
 		//int i=index++;
-		while(index < numberOfSimultaneousAgents) {
+		/*while(index < numberOfSimultaneousAgents) {
 			aStars[i].Setup(startPositions[i,simulationsRunSoFar], targetPositions[i,simulationsRunSoFar]);
 			aStars[i].CalculatePath();
 
 			i = Interlocked.Increment(ref index);
 			//i = index++;
 			//index++;
-		}
+		}*/
 	}
 
 /*

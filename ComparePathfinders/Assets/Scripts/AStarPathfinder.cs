@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class AStarPathfinder {
 
-	Queue<Node> closedSet;
+	//Queue<Node> closedSet;
+	PriorityQueue<Node> closedSet;
 	ArrayList openSet;	// should start with one node.
 
 	Node[,] map;
@@ -74,7 +75,6 @@ public class AStarPathfinder {
 						map[x,y].AddNeighbor(map[x+1,y-1]);
 					if(x<0 && y<0 && map[x+1,y+1].Elevation == 0)
 						map[x,y].AddNeighbor(map[x+1,y+1]);
-
 				}
 			}
 		}
@@ -83,7 +83,8 @@ public class AStarPathfinder {
 	}
 
 	public void Setup(Vector3 start = new Vector3(), Vector3 goal = new Vector3()) {
-		closedSet = new Queue<Node>();
+		//closedSet = new Queue<Node>();
+		closedSet = new PriorityQueue<Node>();
 		openSet = new ArrayList();
 		cameFrom = new Node[xDim, yDim];
 
@@ -104,7 +105,7 @@ public class AStarPathfinder {
 
 	public bool CalculatePath() {
 		openSet.Add(startNode);
-//		Debug.Log("We start with: " + startNode.Neighbors.Count + " neighbors");
+		//Debug.Log("We start with: " + startNode.Neighbors.Count + " neighbors");
 
 		while(openSet.Count > 0) {
 			Node current = findLowestFScoreInOpenSet();
@@ -115,14 +116,15 @@ public class AStarPathfinder {
 
 			// If we dont hit anything, we can be sure that we can move there.
 			// get us from 3seconds to 3 ms.
-			/*
-			RaycastHit hit;
-			if(!Physics.Raycast(current.ElevatedPosition3D, (current.ElevatedPosition3D - goalNode.ElevatedPosition3D), out hit)) {
-				return true;
-			}*/
+			
+//			RaycastHit hit;
+//			if(!Physics.Raycast(current.ElevatedPosition3D, (current.ElevatedPosition3D - goalNode.ElevatedPosition3D), out hit)) {
+//				return true;
+//			}
 
 			openSet.Remove(current);
-			closedSet.Enqueue(current);
+			//closedSet.Enqueue(current);
+			closedSet.Add(current);
 
 			foreach(Node neighbour in current.Neighbors) {
 				if(closedSet.Contains(neighbour)) {
@@ -150,15 +152,10 @@ public class AStarPathfinder {
 	private Node findLowestFScoreInOpenSet() {
 		Node node = (Node)openSet[0];
 		foreach (Node n in openSet) {
-			totalLookupsInCalculate++;
 			if(n.FScore < node.FScore) {
 				node = n;
 			}
 		}
 		return node;
-	}
-
-	public string TotalLookupsInCalculate() {
-		return "The number of total lookups in this was: " + totalLookupsInCalculate;
 	}
 }
