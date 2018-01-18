@@ -40,8 +40,6 @@ public class NavSimulation : MonoBehaviour {
 
 	private GameState gameState;
 
-	TestManager testManager;
-
 	Semaphore indexSemaphore;
 	int index;
 	int coreCount;
@@ -59,7 +57,6 @@ public class NavSimulation : MonoBehaviour {
 		//gameState = GameState.BASE_LINE;
 		world = worldGeneratorTiled.World;
 		aStar = new AStarPathfinder(world);
-		testManager = GameObject.FindObjectOfType<TestManager>();
 		coreCount = SystemInfo.processorCount;
 
 		aStars = new AStarPathfinder[numberOfSimultaneousAgents];
@@ -87,7 +84,6 @@ public class NavSimulation : MonoBehaviour {
 			//print("The built in simulation took: " + builtInSimulationTimer.ElapsedTicks + " ticks. (" + builtInSimulationTimer.ElapsedMilliseconds + " ms)\n" + 
 			//		"The A* single threaded simulation took: " + aStarSingleThreadedSimulationTimer.ElapsedTicks + " ticks. (" + aStarSingleThreadedSimulationTimer.ElapsedMilliseconds + " ms)");
 
-//			testManager.SetState(gameState);
 			//Destroy(gameObject); // TODO: Should we do this just for fun? :P
 		//}
 	}
@@ -135,16 +131,16 @@ public class NavSimulation : MonoBehaviour {
 			thread[i].Start();
 		}
 		// Join threads. (Could be omitted if we were sure the computer could handle it.)
-		for(int i=0;i<coreCount;i++) {
-			thread[i].Join();
-		}
+		// There is a bug here preventing me form joining. Probably while down below. Some threads never reach index = number of simultaneous agents.
+		// for(int i=0;i<coreCount;i++) {
+		// 	thread[i].Join();
+		// }
 		++simulationsRunSoFar;
 		simulationsRunSoFar %= numberOfSimulations;
 	}
 
 	void MultiThreadHelperFunction() {
 		while(index < numberOfSimultaneousAgents) {
-			
 			int i=0;
 			indexSemaphore.WaitOne();
 			i = index++;
