@@ -231,30 +231,30 @@ MonoBehaviour:
   stressLoaderPrefab: {fileID: 114640483827735340, guid: 2dbcc61d15c423c40afb2b2697df618c,
     type: 2}
   stressLoaderSpawnPosition: {x: -25, y: 0, z: 20}
-  stressLoaderSpawnRotation: {x: 0, y: 0, z: 0}
+  stressLoaderSpawnRotation: {x: 0, y: -25, z: 0}
   particleSystemPrefab: {fileID: 198707908322458936, guid: 4015a4ce1218c2745b5c1c70202c8e76,
     type: 2}
   particleSystemSpawnPosition: {x: 25, y: 0, z: 20}
   particleSystemSpawnRotation: {x: 0, y: 0, z: 0}
   simulationStateSettings:
-  - settingsName: 
+  - settingsName: low stress load
     useStressLoader: 0
     stressLoaderMagnitude: 0
     useParticleSystem: 0
     particleSystemMagnitude: 0
-  - settingsName: 
+  - settingsName: medium stress load
     useStressLoader: 1
-    stressLoaderMagnitude: 0
+    stressLoaderMagnitude: 1000
     useParticleSystem: 0
     particleSystemMagnitude: 0
-  - settingsName: 
+  - settingsName: heavy stress load
     useStressLoader: 1
-    stressLoaderMagnitude: 0
+    stressLoaderMagnitude: 2000
     useParticleSystem: 1
     particleSystemMagnitude: 0
-  - settingsName: 
+  - settingsName: ridiculous stress load
     useStressLoader: 1
-    stressLoaderMagnitude: 0
+    stressLoaderMagnitude: 3000
     useParticleSystem: 1
     particleSystemMagnitude: 0
 --- !u!4 &504025372

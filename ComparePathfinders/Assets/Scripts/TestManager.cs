@@ -52,9 +52,9 @@ public class TestManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		stressLoader = Instantiate(stressLoaderPrefab, stressLoaderSpawnPosition, Quaternion.identity) as Stresser;
+		stressLoader = Instantiate(stressLoaderPrefab, stressLoaderSpawnPosition, Quaternion.Euler(stressLoaderSpawnRotation)) as Stresser;
 		stressLoader.gameObject.SetActive(false);
-		particleSystem = Instantiate(particleSystemPrefab, particleSystemSpawnPosition, Quaternion.identity) as ParticleSystem;
+		particleSystem = Instantiate(particleSystemPrefab, particleSystemSpawnPosition, Quaternion.Euler(particleSystemSpawnRotation)) as ParticleSystem;
 		particleSystem.gameObject.SetActive(false);
 
 		currentSimulationState = 0;
@@ -75,6 +75,12 @@ public class TestManager : MonoBehaviour {
 			return;
 		}
 
+		if(Time.time > nextRecordTime) {
+			// Record fps!!
+			nextRecordTime = Time.time + recordFrequency;
+		}
+
+		// Update game state
 		if(Time.time > nextGameStateTime) {
 			gameState++;
 			
@@ -88,7 +94,7 @@ public class TestManager : MonoBehaviour {
 			}
 
 			//navigationSimulator.SetState(gameState);  // TODO: Make sure this does the correct thing.
-
+			//TODO: Update recording status aswell
 			nextGameStateTime = Time.time + gameStateTime;
 		}
 
