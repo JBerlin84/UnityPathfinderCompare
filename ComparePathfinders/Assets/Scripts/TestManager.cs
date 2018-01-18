@@ -47,7 +47,8 @@ public class TestManager : MonoBehaviour {
 		fpsCounter = gameObject.GetComponent(typeof(FPSCounter)) as FPSCounter;
 		computerInformation = gameObject.GetComponent(typeof(ComputerInformation)) as ComputerInformation;
 
-		QualitySettings.vSyncCount = 0;		// For the love of God, make sure we dont have V-Sync on!!!!!!!
+		QualitySettings.vSyncCount = 0;		// For the love of God, make sure V-Sync is off!!!!!!!
+		Application.targetFrameRate = 200;
 	}
 
 	// Use this for initialization
@@ -92,7 +93,7 @@ public class TestManager : MonoBehaviour {
 				SetupSimulationState();
 			}
 
-			navigationSimulator.SetState(gameState);  // TODO: Make sure this does the correct thing.
+			navigationSimulator.SetState(gameState);
 			//TODO: Update recording status aswell
 			nextGameStateTime = Time.time + gameStateTime;
 		}

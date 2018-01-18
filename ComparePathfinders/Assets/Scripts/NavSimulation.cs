@@ -57,7 +57,7 @@ public class NavSimulation : MonoBehaviour {
 		//gameState = GameState.BASE_LINE;
 		world = worldGeneratorTiled.World;
 		aStar = new AStarPathfinder(world);
-		coreCount = SystemInfo.processorCount;
+		coreCount = SystemInfo.processorCount*2;
 
 		aStars = new AStarPathfinder[numberOfSimultaneousAgents];
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
@@ -124,31 +124,69 @@ public class NavSimulation : MonoBehaviour {
 		}
 
 		// Actual calculation
-		index = -1;
+		index = 0;
 		// Start threads
 		Thread[] thread = new Thread[coreCount];
 		for(int i=0;i<coreCount;i++) {
 			thread[i] = new Thread(new ThreadStart(MultiThreadHelperFunction));
 			thread[i].Start();
 		}
+		print(thread.Length + " threads started");
 		// Join threads. (Could be omitted if we were sure the computer could handle it.)
 		// There is a bug here preventing me form joining. Probably while down below. Some threads never reach index = number of simultaneous agents.
-//		for(int i=0;i<coreCount;i++) {
-//		 	thread[i].Join();
-//		}
+		for(int i=0;i<coreCount;i++) {
+		 	thread[i].Join();				// halverar prestandan.
+		}
 		++simulationsRunSoFar;
-		simulationsRunSoFar %= numberOfSimulations;
+		if(simulationsRunSoFar > numberOfSimulations) {
+			simulationsRunSoFar = 0;
+		}
+		//simulationsRunSoFar %= numberOfSimulations;
 	}
 
 	void MultiThreadHelperFunction() {
 		int i = Interlocked.Increment(ref index);
-		while(i < numberOfSimultaneousAgents) {
+		//int i=index++;
+		while(index < numberOfSimultaneousAgents) {
 			aStars[i].Setup(startPositions[i,simulationsRunSoFar], targetPositions[i,simulationsRunSoFar]);
 			aStars[i].CalculatePath();
 
 			i = Interlocked.Increment(ref index);
+			//i = index++;
+			//index++;
 		}
 	}
+
+/*
+	void MultiThreadHelperFunction() {
+		//for(int i=0;i<numberOfSimultaneousAgents;i++) {
+		while(index < numberOfSimultaneousAgents) {
+			//agents[i].transform.position = startPositions[i,simulationsRunSoFar];
+			//targets[i].transform.position = targetPositions[i,simulationsRunSoFar];
+			//agent.transform.position = startPositions[0,simulationsRunSoFar];
+			//target.transform.position = targetPositions[0,simulationsRunSoFar];
+
+			//Thread thread = new Thread(new ThreadStart(MultiThreadHelperFunction));
+			
+			//aStarSingleThreadedSimulationTimer.Start();
+			
+			//aStar.Setup(agents[i].transform.position, targets[i].transform.position);
+			int i=0;
+			indexSemaphore.WaitOne();
+			i = index++;
+			indexSemaphore.Release();
+			aStars[i].Setup(startPositions[i,simulationsRunSoFar], targetPositions[i,simulationsRunSoFar]);
+
+			if(aStars[i].CalculatePath()) {
+//					print("Found aStar.");
+			} else {
+//					print("Not found aStar.");
+			}
+			//aStarSingleThreadedSimulationTimer.Stop();
+
+			//++simulationsRunSoFar;
+		}
+	}*/
 
 
 	void prepareSimulations(int xSize, int zSize) {
@@ -165,13 +203,13 @@ public class NavSimulation : MonoBehaviour {
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
 			for(int j=0;j<numberOfSimulations;j++) {
 				// Start
-				int x = Random.Range(0, xSize-1);// - xSize/2;
-				int z = Random.Range(0, zSize-1);// - zSize/2;
+				int x = Random.Range(0, xSize);// - xSize/2;
+				int z = Random.Range(0, zSize);// - zSize/2;
 				startPositions[i,j] = new Vector3(x, 0, z);
 
 				// Target
-				x = Random.Range(0, xSize-1);// - xSize/2;
-				z = Random.Range(0, zSize-1);// - zSize/2;
+				x = Random.Range(0, xSize);// - xSize/2;
+				z = Random.Range(0, zSize);// - zSize/2;
 				targetPositions[i,j] = new Vector3(x, 0, z);
 			}
 		}

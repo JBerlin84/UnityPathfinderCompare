@@ -55,6 +55,7 @@ public class AStarPathfinder {
 		for(int x=0;x<xDim;x++) {
 			for(int y=0;y<yDim;y++) {
 				if(map[x,y].Elevation == 0) {	// Make sure that we can walk on the tile that we are.
+					// Up, Down, left, right
 					if(x>0 && map[x-1,y].Elevation == 0)
 						map[x,y].AddNeighbor(map[x-1,y]);
 					if(x<xDim-1 && map[x+1,y].Elevation == 0)
@@ -63,6 +64,17 @@ public class AStarPathfinder {
 						map[x,y].AddNeighbor(map[x,y-1]);
 					if(y<yDim-1 && map[x,y+1].Elevation == 0)
 						map[x,y].AddNeighbor(map[x,y+1]);
+
+					// Diagonally
+					if(x>0 && y>0 && map[x-1,y-1].Elevation == 0)
+						map[x,y].AddNeighbor(map[x-1,y-1]);
+					if(x>0 && y<0 && map[x-1,y+1].Elevation == 0)
+						map[x,y].AddNeighbor(map[x-1,y+1]);
+					if(x<0 && y>0 && map[x+1,y-1].Elevation == 0)
+						map[x,y].AddNeighbor(map[x+1,y-1]);
+					if(x<0 && y<0 && map[x+1,y+1].Elevation == 0)
+						map[x,y].AddNeighbor(map[x+1,y+1]);
+
 				}
 			}
 		}

@@ -324,7 +324,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 595766016}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 9.5, y: 0, z: 9.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2115342635}
@@ -346,7 +346,7 @@ MonoBehaviour:
   target: {fileID: 4035874747430868, guid: cbe7a39ae94a2284e82fdd836a73b019, type: 2}
   seed: 0
   randomize: 0
-  numberOfSimulations: 500
+  numberOfSimulations: 5000
   numberOfSimultaneousAgents: 100
 --- !u!1 &769100640
 GameObject:
