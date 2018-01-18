@@ -1,15 +1,6 @@
 ﻿using System.Collections.Generic;
 
 public class TestData {
-	/*
-	private List<int> baselineFPS = new List<int>();
-	private List<int> builtInFPS = new List<int>();
-	private List<int> aStarSingleThreadFPS = new List<int>();
-	private List<int> aStarMultiThreadFPS = new List<int>();
-
-	//public List<int> BaselineFPS { get { return baselineFPS; } }
-	*/
-
 	Dictionary<string, Dictionary<GameState, List<int>>> recordedData;
 
 	public TestData() {
@@ -20,15 +11,15 @@ public class TestData {
 
 		if(!recordedData.ContainsKey(simulationState))
 			recordedData.Add(simulationState, new Dictionary<GameState, List<int>>());
-		Dictionary<GameState, List<int>> d;
-		recordedData.TryGetValue(simulationState, out d);
+		Dictionary<GameState, List<int>> dictionary;
+		recordedData.TryGetValue(simulationState, out dictionary);
 		
-		if(!d.ContainsKey(gameState))
-			d.Add(gameState, new List<int>());
-		List<int> l;
-		d.TryGetValue(gameState, out l);
+		if(!dictionary.ContainsKey(gameState))
+			dictionary.Add(gameState, new List<int>());
+		List<int> list;
+		dictionary.TryGetValue(gameState, out list);
 
-		l.Add(fps);
+		list.Add(fps);
 	}
 
 	public override string ToString() {

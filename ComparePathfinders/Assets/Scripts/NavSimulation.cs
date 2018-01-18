@@ -90,7 +90,7 @@ public class NavSimulation : MonoBehaviour {
 
 	// This seems to work
 	void runBuiltInSimulationOnTiled() {
-		print("built in simulation on tiled");
+//		print("built in simulation on tiled");
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
 			agents[i].transform.position = startPositions[i,simulationsRunSoFar];
 			targets[i].transform.position = targetPositions[i,simulationsRunSoFar];
@@ -102,7 +102,7 @@ public class NavSimulation : MonoBehaviour {
 	}
 
 	void runAStarSimulationOnTiled() {
-		print("A* singlethreaded simulation on tiled");
+//		print("A* singlethreaded simulation on tiled");
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
 			agents[i].transform.position = startPositions[i,simulationsRunSoFar];
 			targets[i].transform.position = targetPositions[i,simulationsRunSoFar];
@@ -116,7 +116,7 @@ public class NavSimulation : MonoBehaviour {
 
 	void runAStarSimulationOnTiledMultiThread() {
 		// TODO: We are probably too fast here. Make sure were never having more than a certain ammount of threads?
-		print("A* multithreaded simulation on tiled");
+//		print("A* multithreaded simulation on tiled");
 		// Just for graphics. Might actually destroy a little bit. But is the same for every part.
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
 			agents[i].transform.position = startPositions[i,simulationsRunSoFar];

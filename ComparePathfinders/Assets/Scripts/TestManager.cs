@@ -15,7 +15,7 @@ public class TestManager : MonoBehaviour {
 	new private ParticleSystem particleSystem = null;
 
 	// Helper objects
-	private TestData testData = new TestData();
+	private TestData testData;
 
 	// Helper variables
 	private float nextRecordTime;
@@ -47,6 +47,7 @@ public class TestManager : MonoBehaviour {
 	void Awake () {
 		fpsCounter = gameObject.GetComponent(typeof(FPSCounter)) as FPSCounter;
 		computerInformation = gameObject.GetComponent(typeof(ComputerInformation)) as ComputerInformation;
+		testData = new TestData();
 
 		QualitySettings.vSyncCount = 0;			// For the love of God, make sure V-Sync is off!!!!!!!
 		//Application.targetFrameRate = 200;	// We shouldn't have to use this when v-sync is off.
@@ -75,8 +76,10 @@ public class TestManager : MonoBehaviour {
 	void Update () {
 		// Don't do anything more if were finished. Save here and exit appliation.
 		if(currentSimulationState >= simulationStateSettings.Length) {
-			print("Testdata:\n" + testData.ToString());
-			return;
+			Time.timeScale = 0;
+			SaveDataToFile();
+			Application.Quit();	// Exit everything
+		// quit application;
 		}
 
 		if(Time.time > nextRecordTime) {
@@ -134,6 +137,13 @@ public class TestManager : MonoBehaviour {
 			ParticleSystem.MainModule main = particleSystem.main;	// unity does not allow me to change this myself.
 			main.maxParticles = simulationStateSettings[currentSimulationState].particleSystemMagnitude;
 		}
+	}
+
+	private void SaveDataToFile() {
+		string data = computerInformation.ToString() + "\n" + testData.ToString();
+		string filename = "test.txt";
+		System.IO.File.WriteAllText(filename, data);
+		print("data saved!!");
 	}
 
 	// public void SimulationFinished() {

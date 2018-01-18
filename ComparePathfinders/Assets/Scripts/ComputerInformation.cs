@@ -30,7 +30,7 @@ public class ComputerInformation : MonoBehaviour {
 		graphicsDeviceType = SystemInfo.graphicsDeviceType.ToString();
 		graphicsMemorySize = SystemInfo.graphicsMemorySize.ToString();
 
-		print(ToString());
+		//print(ToString());
 	}
 
 	public override string ToString() {
