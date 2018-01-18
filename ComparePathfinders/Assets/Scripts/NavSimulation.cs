@@ -166,13 +166,13 @@ public class NavSimulation : MonoBehaviour {
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
 			for(int j=0;j<numberOfSimulations;j++) {
 				// Start
-				int x = Random.Range(0, xSize-1);
-				int z = Random.Range(0, zSize-1);
+				int x = Random.Range(0, xSize-1) - xSize/2;
+				int z = Random.Range(0, zSize-1) - zSize/2;
 				startPositions[i,j] = new Vector3(x, 0, z);
 
 				// Target
-				x = Random.Range(0, xSize-1);
-				z = Random.Range(0, zSize-1);
+				x = Random.Range(0, xSize-1) - xSize/2;
+				z = Random.Range(0, zSize-1) - zSize/2;
 				targetPositions[i,j] = new Vector3(x, 0, z);
 			}
 		}
