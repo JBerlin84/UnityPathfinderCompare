@@ -32,14 +32,8 @@ public class NavSimulation : MonoBehaviour {
 	private Transform[] targets;
 
 	// Use this for initialization
-
-//	Stopwatch builtInSimulationTimer = new System.Diagnostics.Stopwatch();
-//	Stopwatch aStarSingleThreadedSimulationTimer = new System.Diagnostics.Stopwatch();
 	
 	int simulationsRunSoFar = 0;
-
-//	bool builtInSimulatorFinished = false;
-//	bool aStarSingleThreadedFinished = false;
 
 	AStarPathfinder aStar;
 	AStarPathfinder[] aStars;
@@ -62,7 +56,7 @@ public class NavSimulation : MonoBehaviour {
 		} else {
 			Random.InitState(seed.GetHashCode());
 		}
-		gameState = GameState.BASE_LINE;
+		//gameState = GameState.BASE_LINE;
 		world = worldGeneratorTiled.World;
 		aStar = new AStarPathfinder(world);
 		testManager = GameObject.FindObjectOfType<TestManager>();
@@ -89,153 +83,78 @@ public class NavSimulation : MonoBehaviour {
 		else if(gameState == GameState.A_STAR_PATH_FINDER_MULTI_THREAD)
 			runAStarSimulationOnTiledMultiThread();
 		//	gameState = GameState.CLEAN_UP;
-		else if(gameState == GameState.CLEAN_UP) {
+		//else if(gameState == GameState.CLEAN_UP) {
 			//print("The built in simulation took: " + builtInSimulationTimer.ElapsedTicks + " ticks. (" + builtInSimulationTimer.ElapsedMilliseconds + " ms)\n" + 
 			//		"The A* single threaded simulation took: " + aStarSingleThreadedSimulationTimer.ElapsedTicks + " ticks. (" + aStarSingleThreadedSimulationTimer.ElapsedMilliseconds + " ms)");
 
 //			testManager.SetState(gameState);
-			Destroy(gameObject); // TODO: Should we do this just for fun? :P
-		}
+			//Destroy(gameObject); // TODO: Should we do this just for fun? :P
+		//}
 	}
 
 	// This seems to work
 	void runBuiltInSimulationOnTiled() {
-		// Stopwatch frameWatch = System.Diagnostics.Stopwatch.StartNew();
-		
-		if(simulationsRunSoFar < numberOfSimulations) {
-			//while(simulationsRunSoFar < numberOfSimulations && frameWatch.ElapsedMilliseconds < 1) {
-			for(int i=0;i<numberOfSimultaneousAgents;i++) {
-				agents[i].transform.position = startPositions[i,simulationsRunSoFar];
-				targets[i].transform.position = targetPositions[i,simulationsRunSoFar];
-				//agent.transform.position = startPositions[i,simulationsRunSoFar];
-				//target.transform.position = targetPositions[i,simulationsRunSoFar];
-				
-				//builtInSimulationTimer.Start();
-				NavMeshPath path = new NavMeshPath();
-				if(agents[i].CalculatePath(target.position, path)) {
-//					print("Found built in.");
-					//print("Path calculated between " + startPositions[simulationsRunSoFar].ToString() + " and " + targetPositions[simulationsRunSoFar].ToString() + "!");
-				} else {
-//					print("Not found built in.");
-					//print("Path could not be found between " + startPositions[simulationsRunSoFar].ToString() + " and " + targetPositions[simulationsRunSoFar].ToString() + "!");
-				}
-				//builtInSimulationTimer.Stop();
-				
-//				++simulationsRunSoFar;
-			}
-			++simulationsRunSoFar;
-		} else {
-			//builtInSimulatorFinished = true;
-			//gameState = GameState.A_STAR_PATH_FINDER_SINGLE_THREAD;
-			gameState = GameState.A_STAR_PATH_FINDER_MULTI_THREAD;
-//			testManager.SetState(gameState);
-			simulationsRunSoFar = 0;
+		print("built in simulation on tiled");
+		for(int i=0;i<numberOfSimultaneousAgents;i++) {
+			agents[i].transform.position = startPositions[i,simulationsRunSoFar];
+			targets[i].transform.position = targetPositions[i,simulationsRunSoFar];
+			NavMeshPath path = new NavMeshPath();
+			agents[i].CalculatePath(target.position, path);
 		}
+		++simulationsRunSoFar;
+		simulationsRunSoFar %= numberOfSimulations;
 	}
 
 	void runAStarSimulationOnTiled() {
-		// Stopwatch frameWatch = System.Diagnostics.Stopwatch.StartNew();
+		print("A* singlethreaded simulation on tiled");
+		for(int i=0;i<numberOfSimultaneousAgents;i++) {
+			agents[i].transform.position = startPositions[i,simulationsRunSoFar];
+			targets[i].transform.position = targetPositions[i,simulationsRunSoFar];
 
-		if(simulationsRunSoFar < numberOfSimulations) {
-			//while(simulationsRunSoFar < numberOfSimulations && frameWatch.ElapsedMilliseconds < 1) {
-			for(int i=0;i<numberOfSimultaneousAgents;i++) {
-				agents[i].transform.position = startPositions[i,simulationsRunSoFar];
-				targets[i].transform.position = targetPositions[i,simulationsRunSoFar];
-				//agent.transform.position = startPositions[0,simulationsRunSoFar];
-				//target.transform.position = targetPositions[0,simulationsRunSoFar];
-
-				//aStarSingleThreadedSimulationTimer.Start();
-				aStar.Setup(agents[i].transform.position, targets[i].transform.position);
-				if(aStar.CalculatePath()) {
-//					print("Found aStar.");
-				} else {
-//					print("Not found aStar.");
-				}
-				//aStarSingleThreadedSimulationTimer.Stop();
-
-				//++simulationsRunSoFar;
-			}
-			++simulationsRunSoFar;
-		} else {
-			//aStarSingleThreadedFinished = true;
-			//gameState = GameState.A_STAR_PATH_FINDER_MULTI_THREAD;
-			// TODO: Multithreaded here.
-			gameState = GameState.A_STAR_PATH_FINDER_MULTI_THREAD;
-//			testManager.SetState(gameState);
-			simulationsRunSoFar = 0;
+			aStar.Setup(agents[i].transform.position, targets[i].transform.position);
+			aStar.CalculatePath();
 		}
+		++simulationsRunSoFar;
+		simulationsRunSoFar %= numberOfSimulations;
 	}
 
 	void runAStarSimulationOnTiledMultiThread() {
-		// Stopwatch frameWatch = System.Diagnostics.Stopwatch.StartNew();
-
-		if(simulationsRunSoFar < numberOfSimulations) {
-			//while(simulationsRunSoFar < numberOfSimulations && frameWatch.ElapsedMilliseconds < 1) {
-			for(int i=0;i<numberOfSimultaneousAgents;i++) {
-				agents[i].transform.position = startPositions[i,simulationsRunSoFar];
-				targets[i].transform.position = targetPositions[i,simulationsRunSoFar];
-			}
-				//agent.transform.position = startPositions[0,simulationsRunSoFar];
-				//target.transform.position = targetPositions[0,simulationsRunSoFar];
-
-			index = 0;
-			for(int i=0;i<coreCount;i++) {
-				Thread thread = new Thread(new ThreadStart(MultiThreadHelperFunction));
-				thread.Start();
-			}
-				/*
-				//aStarSingleThreadedSimulationTimer.Start();
-				aStar.Setup(agents[i].transform.position, targets[i].transform.position);
-				if(aStar.CalculatePath()) {
-//					print("Found aStar.");
-				} else {
-//					print("Not found aStar.");
-				}
-				//aStarSingleThreadedSimulationTimer.Stop();
-
-				//++simulationsRunSoFar;
-				*/
-			//}
-			++simulationsRunSoFar;
-		} else {
-			//aStarSingleThreadedFinished = true;
-			//gameState = GameState.A_STAR_PATH_FINDER_MULTI_THREAD;
-			// TODO: Multithreaded here.
-			gameState = GameState.CLEAN_UP;
-//			testManager.SetState(gameState);
-			simulationsRunSoFar = 0;
+		print("A* multithreaded simulation on tiled");
+		// Just for graphics. Might actually destroy a little bit. But is the same for every part.
+		for(int i=0;i<numberOfSimultaneousAgents;i++) {
+			agents[i].transform.position = startPositions[i,simulationsRunSoFar];
+			targets[i].transform.position = targetPositions[i,simulationsRunSoFar];
 		}
+
+		// Actual calculation
+		index = 0;
+		// Start threads
+		Thread[] thread = new Thread[coreCount];
+		for(int i=0;i<coreCount;i++) {
+			thread[i] = new Thread(new ThreadStart(MultiThreadHelperFunction));
+			thread[i].Start();
+		}
+		// Join threads. (Could be omitted if we were sure the computer could handle it.)
+		for(int i=0;i<coreCount;i++) {
+			thread[i].Join();
+		}
+		++simulationsRunSoFar;
+		simulationsRunSoFar %= numberOfSimulations;
 	}
 
 	void MultiThreadHelperFunction() {
-		//for(int i=0;i<numberOfSimultaneousAgents;i++) {
 		while(index < numberOfSimultaneousAgents) {
-			//agents[i].transform.position = startPositions[i,simulationsRunSoFar];
-			//targets[i].transform.position = targetPositions[i,simulationsRunSoFar];
-			//agent.transform.position = startPositions[0,simulationsRunSoFar];
-			//target.transform.position = targetPositions[0,simulationsRunSoFar];
-
-			//Thread thread = new Thread(new ThreadStart(MultiThreadHelperFunction));
-			/*
-			//aStarSingleThreadedSimulationTimer.Start();*/
 			
-			//aStar.Setup(agents[i].transform.position, targets[i].transform.position);
 			int i=0;
 			indexSemaphore.WaitOne();
 			i = index++;
 			indexSemaphore.Release();
+
 			aStars[i].Setup(startPositions[i,simulationsRunSoFar], targetPositions[i,simulationsRunSoFar]);
-
-			if(aStars[i].CalculatePath()) {
-//					print("Found aStar.");
-			} else {
-//					print("Not found aStar.");
-			}
-			//aStarSingleThreadedSimulationTimer.Stop();
-
-			//++simulationsRunSoFar;
+			aStars[i].CalculatePath();
 		}
 	}
+
 
 	void prepareSimulations(int xSize, int zSize) {
 		startPositions = new Vector3[numberOfSimultaneousAgents, numberOfSimulations];
@@ -266,9 +185,5 @@ public class NavSimulation : MonoBehaviour {
 	// TODO: This should take the state.
 	public void SetState(GameState state) {
 		gameState = state;
-	}
-
-	public GameState GetState() {
-		return gameState;
 	}
 }

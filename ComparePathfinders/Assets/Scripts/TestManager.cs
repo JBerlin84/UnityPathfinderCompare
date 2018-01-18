@@ -64,7 +64,6 @@ public class TestManager : MonoBehaviour {
 
 		nextGameStateTime = Time.time + gameStateTime;
 		gameState = GameState.BASE_LINE;
-		print(gameState);
 	}
 	
 	// Update is called once per frame
@@ -93,7 +92,7 @@ public class TestManager : MonoBehaviour {
 				SetupSimulationState();
 			}
 
-			//navigationSimulator.SetState(gameState);  // TODO: Make sure this does the correct thing.
+			navigationSimulator.SetState(gameState);  // TODO: Make sure this does the correct thing.
 			//TODO: Update recording status aswell
 			nextGameStateTime = Time.time + gameStateTime;
 		}
@@ -119,8 +118,8 @@ public class TestManager : MonoBehaviour {
 	}
 
 	private void SetupSimulationState() {
-		print("use stress loader: " + simulationStateSettings[currentSimulationState].useStressLoader + ", magnitude: " + simulationStateSettings[currentSimulationState].stressLoaderMagnitude + "\n" +
-				"use particle system: " + simulationStateSettings[currentSimulationState].useParticleSystem + ", magnitude: " + simulationStateSettings[currentSimulationState].stressLoaderMagnitude);
+		// print("use stress loader: " + simulationStateSettings[currentSimulationState].useStressLoader + ", magnitude: " + simulationStateSettings[currentSimulationState].stressLoaderMagnitude + "\n" +
+		// 		"use particle system: " + simulationStateSettings[currentSimulationState].useParticleSystem + ", magnitude: " + simulationStateSettings[currentSimulationState].stressLoaderMagnitude);
 		stressLoader.gameObject.SetActive(simulationStateSettings[currentSimulationState].useStressLoader);
 		if(stressLoader.gameObject.activeSelf) {
 			stressLoader.SetBoxCount(simulationStateSettings[currentSimulationState].stressLoaderMagnitude);
