@@ -115,6 +115,7 @@ public class NavSimulation : MonoBehaviour {
 	}
 
 	void runAStarSimulationOnTiledMultiThread() {
+		// TODO: We are probably too fast here. Make sure were never having more than a certain ammount of threads?
 		print("A* multithreaded simulation on tiled");
 		// Just for graphics. Might actually destroy a little bit. But is the same for every part.
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
