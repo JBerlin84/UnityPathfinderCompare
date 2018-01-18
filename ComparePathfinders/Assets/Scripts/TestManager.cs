@@ -48,12 +48,15 @@ public class TestManager : MonoBehaviour {
 		fpsCounter = gameObject.GetComponent(typeof(FPSCounter)) as FPSCounter;
 		computerInformation = gameObject.GetComponent(typeof(ComputerInformation)) as ComputerInformation;
 
-		QualitySettings.vSyncCount = 0;		// For the love of God, make sure V-Sync is off!!!!!!!
-		Application.targetFrameRate = 200;
+		QualitySettings.vSyncCount = 0;			// For the love of God, make sure V-Sync is off!!!!!!!
+		//Application.targetFrameRate = 200;	// We shouldn't have to use this when v-sync is off.
 	}
 
 	// Use this for initialization
 	void Start () {
+		if(QualitySettings.vSyncCount > 0)
+			QualitySettings.vSyncCount = 0;
+
 		stressLoader = Instantiate(stressLoaderPrefab, stressLoaderSpawnPosition, Quaternion.Euler(stressLoaderSpawnRotation)) as Stresser;
 		stressLoader.gameObject.SetActive(false);
 		particleSystem = Instantiate(particleSystemPrefab, particleSystemSpawnPosition, Quaternion.Euler(particleSystemSpawnRotation)) as ParticleSystem;
@@ -72,12 +75,12 @@ public class TestManager : MonoBehaviour {
 	void Update () {
 		// Don't do anything more if were finished. Save here and exit appliation.
 		if(currentSimulationState >= simulationStateSettings.Length) {
-			print("we are finished!");
+			print("Testdata:\n" + testData.ToString());
 			return;
 		}
 
 		if(Time.time > nextRecordTime) {
-			// Record fps!!
+			testData.Record(simulationStateSettings[currentSimulationState].settingsName, gameState, fpsCounter.getFPS());
 			nextRecordTime = Time.time + recordFrequency;
 		}
 
@@ -95,7 +98,6 @@ public class TestManager : MonoBehaviour {
 			}
 
 			navigationSimulator.SetState(gameState);
-			//TODO: Update recording status aswell
 			nextGameStateTime = Time.time + gameStateTime;
 		}
 
