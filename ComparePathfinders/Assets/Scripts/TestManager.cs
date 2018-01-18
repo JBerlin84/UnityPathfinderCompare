@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,7 +19,8 @@ public class TestManager : MonoBehaviour {
 
 	// Helper variables
 	private float nextRecordTime;
-	private float baseLineTest;
+	private float nextGameStateTime;			// used to keep track of time of each game state. (several within each stress load.)
+	private int currentSimulationState;
 
 	[Header("Global settings")]
 	public float gameStateTime;
@@ -38,7 +40,7 @@ public class TestManager : MonoBehaviour {
 
 
 	[Header("Test state settings")]
-	public SimulationStateSettings[] settings = new SimulationStateSettings[4];
+	public SimulationStateSettings[] simulationStateSettings = new SimulationStateSettings[4];
 
 
 	void Awake () {
@@ -55,13 +57,44 @@ public class TestManager : MonoBehaviour {
 		particleSystem = Instantiate(particleSystemPrefab, particleSystemSpawnPosition, Quaternion.identity) as ParticleSystem;
 		particleSystem.gameObject.SetActive(false);
 
-		// nextRecordTime = Time.time + recordFrequency;
-		// baseLineTest = Time.time + gameStateTime;
+		currentSimulationState = 0;
+
+		// Initialize first state
+		SetupSimulationState();
+
+		nextGameStateTime = Time.time + gameStateTime;
+		gameState = GameState.BASE_LINE;
+		print(gameState);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		// Don't do anything more if were finished. Save here and exit appliation.
+		if(currentSimulationState >= simulationStateSettings.Length) {
+			print("we are finished!");
+			return;
+		}
+
+		if(Time.time > nextGameStateTime) {
+			gameState++;
+			
+			if((int)gameState >= Enum.GetNames(typeof(GameState)).Length) {
+				gameState = 0;
+				currentSimulationState++;
+				if(currentSimulationState >= simulationStateSettings.Length)
+					return;		// make sure were not getting index out of range.
+				
+				SetupSimulationState();
+			}
+
+			//navigationSimulator.SetState(gameState);  // TODO: Make sure this does the correct thing.
+
+			nextGameStateTime = Time.time + gameStateTime;
+		}
+
+
+
+
 
 
 		// if(Time.time >= nextRecordTime) {
@@ -79,9 +112,20 @@ public class TestManager : MonoBehaviour {
 		// }
 	}
 
-	// public void SetState(GameState gameState) {
-	// 	this.gameState = gameState;
-	// }
+	private void SetupSimulationState() {
+		print("use stress loader: " + simulationStateSettings[currentSimulationState].useStressLoader + ", magnitude: " + simulationStateSettings[currentSimulationState].stressLoaderMagnitude + "\n" +
+				"use particle system: " + simulationStateSettings[currentSimulationState].useParticleSystem + ", magnitude: " + simulationStateSettings[currentSimulationState].stressLoaderMagnitude);
+		stressLoader.gameObject.SetActive(simulationStateSettings[currentSimulationState].useStressLoader);
+		if(stressLoader.gameObject.activeSelf) {
+			stressLoader.SetBoxCount(simulationStateSettings[currentSimulationState].stressLoaderMagnitude);
+		}
+
+		particleSystem.gameObject.SetActive(simulationStateSettings[currentSimulationState].useParticleSystem);
+		if(particleSystem.gameObject.activeSelf) {
+			ParticleSystem.MainModule main = particleSystem.main;	// unity does not allow me to change this myself.
+			main.maxParticles = simulationStateSettings[currentSimulationState].particleSystemMagnitude;
+		}
+	}
 
 	// public void SimulationFinished() {
 	// 	print("We are now finished and are packing up everything!!!");

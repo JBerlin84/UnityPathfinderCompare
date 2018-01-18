@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a35cd9a6ceb00e24ea82107817a5a57d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameStateTime: 5
+  gameStateTime: 1
   recordFrequency: 0.1
   navigationSimulator: {fileID: 595766019}
   stressLoaderPrefab: {fileID: 114640483827735340, guid: 2dbcc61d15c423c40afb2b2697df618c,
@@ -236,23 +236,23 @@ MonoBehaviour:
     type: 2}
   particleSystemSpawnPosition: {x: 25, y: 0, z: 20}
   particleSystemSpawnRotation: {x: 0, y: 0, z: 0}
-  settings:
-  - settingsName: Light load
-    useStressLoader: 1
+  simulationStateSettings:
+  - settingsName: 
+    useStressLoader: 0
     stressLoaderMagnitude: 0
-    useParticleSystem: 1
+    useParticleSystem: 0
     particleSystemMagnitude: 0
-  - settingsName: Medium load
+  - settingsName: 
     useStressLoader: 1
     stressLoaderMagnitude: 0
     useParticleSystem: 0
     particleSystemMagnitude: 0
-  - settingsName: Heavy load
+  - settingsName: 
     useStressLoader: 1
     stressLoaderMagnitude: 0
     useParticleSystem: 1
     particleSystemMagnitude: 0
-  - settingsName: Ridiculous load
+  - settingsName: 
     useStressLoader: 1
     stressLoaderMagnitude: 0
     useParticleSystem: 1
