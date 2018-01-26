@@ -206,6 +206,7 @@ GameObject:
   m_Component:
   - component: {fileID: 504025372}
   - component: {fileID: 504025373}
+  - component: {fileID: 504025374}
   - component: {fileID: 504025371}
   m_Layer: 0
   m_Name: TestManager
@@ -226,7 +227,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameStateTime: 5
-  recordFrequency: 0.1
+  recordFrequency: 0.2
+  threadMultiplier: 1
   navigationSimulator: {fileID: 595766019}
   stressLoaderPrefab: {fileID: 114640483827735340, guid: 2dbcc61d15c423c40afb2b2697df618c,
     type: 2}
@@ -281,6 +283,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 412b3a436fc2bac4b90118fc8b6caf3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &504025374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 504025370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9564d121517068f4fa0648fe7eff44de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  measureFrequency: 1
 --- !u!1 &595766016
 GameObject:
   m_ObjectHideFlags: 0

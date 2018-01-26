@@ -12,7 +12,7 @@ public class TestManager : MonoBehaviour {
 	private ComputerInformation computerInformation;
 	private GameState gameState;
 	private Stresser stressLoader = null;
-	new private ParticleSystem particleSystem = null;
+	private ParticleSystem pSystem = null;
 
 	// Helper objects
 	private TestData testData;
@@ -60,8 +60,8 @@ public class TestManager : MonoBehaviour {
 
 		stressLoader = Instantiate(stressLoaderPrefab, stressLoaderSpawnPosition, Quaternion.Euler(stressLoaderSpawnRotation)) as Stresser;
 		stressLoader.gameObject.SetActive(false);
-		particleSystem = Instantiate(particleSystemPrefab, particleSystemSpawnPosition, Quaternion.Euler(particleSystemSpawnRotation)) as ParticleSystem;
-		particleSystem.gameObject.SetActive(false);
+		pSystem = Instantiate(particleSystemPrefab, particleSystemSpawnPosition, Quaternion.Euler(particleSystemSpawnRotation)) as ParticleSystem;
+		pSystem.gameObject.SetActive(false);
 
 		currentSimulationState = 0;
 
@@ -132,9 +132,9 @@ public class TestManager : MonoBehaviour {
 			stressLoader.SetBoxCount(simulationStateSettings[currentSimulationState].stressLoaderMagnitude);
 		}
 
-		particleSystem.gameObject.SetActive(simulationStateSettings[currentSimulationState].useParticleSystem);
-		if(particleSystem.gameObject.activeSelf) {
-			ParticleSystem.MainModule main = particleSystem.main;	// unity does not allow me to change this myself.
+		pSystem.gameObject.SetActive(simulationStateSettings[currentSimulationState].useParticleSystem);
+		if(pSystem.gameObject.activeSelf) {
+			ParticleSystem.MainModule main = pSystem.main;	// unity does not allow me to change this myself.
 			main.maxParticles = simulationStateSettings[currentSimulationState].particleSystemMagnitude;
 		}
 	}

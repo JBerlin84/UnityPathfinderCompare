@@ -18,8 +18,6 @@ public class AStarPathfinder {
 	Node startNode;
 	Node goalNode;
 
-	int totalLookupsInCalculate = 0;
-
 	public AStarPathfinder(int[,] world) {
 		float[,] tempWorld = new float[world.GetLength(0), world.GetLength(1)];
 		for(int x=0;x<world.GetLength(0); x++) {

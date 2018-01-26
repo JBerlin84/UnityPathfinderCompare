@@ -6,11 +6,14 @@ using UnityEngine;
 public class PriorityQueue<T> where T : IComparable{
 
 	T[] list;
+	Hashtable table;
+
 	int count;
 	public int Count { get { return count; } }
 
 	public PriorityQueue(int initialSize = 10) {
 		list = new T[initialSize];
+		table = new Hashtable();
 		count = 0;
 	}
 
@@ -27,6 +30,8 @@ public class PriorityQueue<T> where T : IComparable{
 		list[count] = n;
 		++count;
 
+		table.Add(n,n);
+
 		BubbleUp();
 	}
 
@@ -36,6 +41,8 @@ public class PriorityQueue<T> where T : IComparable{
 		--count;
 		drippleDown();
 		
+		table.Remove(head);
+
 		return head;
 	}
 
@@ -90,7 +97,8 @@ public class PriorityQueue<T> where T : IComparable{
 		}
 	}
 
-	// Wounder if this work
+	// Works but slow. Make the one below work as supposed.
+	/*
 	public bool Contains(T o) {
 		for(int i=0;i<count;i++) {
 			if(list[i].Equals(o)) {
@@ -98,32 +106,11 @@ public class PriorityQueue<T> where T : IComparable{
 			}
 		}
 		return false;
-	}
+	}*/
 
 	// Faster contains than that one above
+	// Increases memoryusage somewhat but almost doubles the speed.
 	public bool Contains(T o) {
-		int i = 0;
-
-		while(i<=count) {
-			int left = 2 * i + 1;
-			int right = 2 * i + 2;
-
-			// Left child is smaller
-			if(list.Length >= 3 && list[left].CompareTo(list[right]) < 0) {
-				T temp = list[i];
-				list[i] = list[left];
-				list[left] = temp;
-				i = left;
-			} else if (list.Length >= 3 && list[left].CompareTo(list[right]) > 0) {	// Right child.
-				T temp = list[i];
-				list[i] = list[left];
-				list[left] = temp;
-				i=right;
-			} else {
-				return true;
-			}
-		}
-
-		return false;
+		return table.Contains(o);
 	}
 }

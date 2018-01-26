@@ -40,7 +40,6 @@ public class NavSimulation : MonoBehaviour {
 
 	private GameState gameState;
 
-	Semaphore indexSemaphore;
 	int threadIndex;
 	int coreCount;
 
@@ -65,8 +64,6 @@ public class NavSimulation : MonoBehaviour {
 		}
 		
 		prepareSimulations(world.GetLength(0), world.GetLength(1));
-
-		indexSemaphore = new Semaphore(0,1);
 	}
 
 	void Update() {
