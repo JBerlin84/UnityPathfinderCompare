@@ -99,4 +99,31 @@ public class PriorityQueue<T> where T : IComparable{
 		}
 		return false;
 	}
+
+	// Faster contains than that one above
+	public bool Contains(T o) {
+		int i = 0;
+
+		while(i<=count) {
+			int left = 2 * i + 1;
+			int right = 2 * i + 2;
+
+			// Left child is smaller
+			if(list.Length >= 3 && list[left].CompareTo(list[right]) < 0) {
+				T temp = list[i];
+				list[i] = list[left];
+				list[left] = temp;
+				i = left;
+			} else if (list.Length >= 3 && list[left].CompareTo(list[right]) > 0) {	// Right child.
+				T temp = list[i];
+				list[i] = list[left];
+				list[left] = temp;
+				i=right;
+			} else {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
