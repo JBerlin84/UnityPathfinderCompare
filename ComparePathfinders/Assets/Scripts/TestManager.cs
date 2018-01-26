@@ -21,6 +21,7 @@ public class TestManager : MonoBehaviour {
 	private float nextRecordTime;
 	private float nextGameStateTime;			// used to keep track of time of each game state. (several within each stress load.)
 	private int currentSimulationState;
+	private bool saved;
 
 	[Header("Global settings")]
 	public float gameStateTime;
@@ -51,6 +52,7 @@ public class TestManager : MonoBehaviour {
 
 		QualitySettings.vSyncCount = 0;			// For the love of God, make sure V-Sync is off!!!!!!!
 		//Application.targetFrameRate = 200;	// We shouldn't have to use this when v-sync is off.
+		saved = false;
 	}
 
 	// Use this for initialization
@@ -77,7 +79,10 @@ public class TestManager : MonoBehaviour {
 		// Don't do anything more if were finished. Save here and exit appliation.
 		if(currentSimulationState >= simulationStateSettings.Length) {
 			Time.timeScale = 0;
-			SaveDataToFile();
+			if(!saved) {
+				SaveDataToFile();
+				saved = true;
+			}
 			Application.Quit();	// Exit everything
 		// quit application;
 		}
@@ -141,7 +146,9 @@ public class TestManager : MonoBehaviour {
 
 	private void SaveDataToFile() {
 		string data = computerInformation.ToString() + "\n" + testData.ToString();
-		string filename = "test.txt";
+		string filename = "test";
+		filename += DateTime.Now.ToString("yyyMMddHHmmss");
+		filename += ".txt";
 		System.IO.File.WriteAllText(filename, data);
 		print("data saved!!");
 	}
