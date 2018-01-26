@@ -19,12 +19,14 @@ public class TestManager : MonoBehaviour {
 
 	// Helper variables
 	private float nextRecordTime;
+	private float warmupTimeFinish;
 	private float nextGameStateTime;			// used to keep track of time of each game state. (several within each stress load.)
 	private int currentSimulationState;
 	private bool saved;
 
 	[Header("Global settings")]
 	public float gameStateTime;
+	public float warmupTime;					// used to counteract the fact that the fps-counter "lags" a bit behind.
 	public float recordFrequency;
 	public int threadMultiplier = 1;
 
@@ -72,6 +74,9 @@ public class TestManager : MonoBehaviour {
 
 		nextGameStateTime = Time.time + gameStateTime;
 		gameState = GameState.BASE_LINE;
+
+		nextRecordTime = Time.time + recordFrequency;
+		warmupTimeFinish = Time.time + warmupTime;
 	}
 	
 	// Update is called once per frame
@@ -83,11 +88,12 @@ public class TestManager : MonoBehaviour {
 				SaveDataToFile();
 				saved = true;
 			}
+			print("Application quit");
 			Application.Quit();	// Exit everything
 		// quit application;
 		}
 
-		if(Time.time > nextRecordTime) {
+		if(Time.time > nextRecordTime && Time.time > warmupTimeFinish) {
 			testData.Record(simulationStateSettings[currentSimulationState].settingsName, gameState, fpsCounter.getFPS());
 			nextRecordTime = Time.time + recordFrequency;
 		}
@@ -107,6 +113,7 @@ public class TestManager : MonoBehaviour {
 
 			navigationSimulator.SetState(gameState);
 			nextGameStateTime = Time.time + gameStateTime;
+			warmupTimeFinish = Time.time + warmupTime;
 		}
 
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class PriorityQueue<T> where T : IComparable{
@@ -11,14 +12,14 @@ public class PriorityQueue<T> where T : IComparable{
 	int count;
 	public int Count { get { return count; } }
 
-	public PriorityQueue(int initialSize = 10) {
+	public PriorityQueue(int initialSize = 100) {
 		list = new T[initialSize];
 		table = new Hashtable();
 		count = 0;
 	}
 
 	public void Add(T n) {
-		// if list is ful, expand
+		// if list is full, expand
 		if(list.Length <= count) {
 			T[] temp = new T[count*2];
 			for(int i=0;i<count;i++) {

@@ -227,6 +227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameStateTime: 5
+  warmupTime: 0.5
   recordFrequency: 0.2
   threadMultiplier: 1
   navigationSimulator: {fileID: 595766019}
