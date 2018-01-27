@@ -53,7 +53,6 @@ public class NavSimulation : MonoBehaviour {
 		} else {
 			Random.InitState(seed.GetHashCode());
 		}
-		//gameState = GameState.BASE_LINE;
 		world = worldGeneratorTiled.World;
 		aStar = new AStarPathfinder(world);
 		coreCount = SystemInfo.processorCount;
@@ -67,27 +66,16 @@ public class NavSimulation : MonoBehaviour {
 	}
 
 	void Update() {
-
-		// if(gameState == GameState.BASE_LINE)
-		//	; // Don't do anything.
 		if(gameState == GameState.BUILT_IN_PATHFINDER)
 			runBuiltInSimulationOnTiled();
 		else if(gameState == GameState.A_STAR_PATH_FINDER_SINGLE_THREAD)
 			runAStarSimulationOnTiled();
 		else if(gameState == GameState.A_STAR_PATH_FINDER_MULTI_THREAD)
 			runAStarSimulationOnTiledMultiThread();
-		//	gameState = GameState.CLEAN_UP;
-		//else if(gameState == GameState.CLEAN_UP) {
-			//print("The built in simulation took: " + builtInSimulationTimer.ElapsedTicks + " ticks. (" + builtInSimulationTimer.ElapsedMilliseconds + " ms)\n" + 
-			//		"The A* single threaded simulation took: " + aStarSingleThreadedSimulationTimer.ElapsedTicks + " ticks. (" + aStarSingleThreadedSimulationTimer.ElapsedMilliseconds + " ms)");
-
-			//Destroy(gameObject); // TODO: Should we do this just for fun? :P
-		//}
 	}
 
 	// This seems to work
 	void runBuiltInSimulationOnTiled() {
-//		print("built in simulation on tiled");
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
 			agents[i].transform.position = startPositions[i,simulationsRunSoFar];
 			targets[i].transform.position = targetPositions[i,simulationsRunSoFar];
@@ -99,7 +87,6 @@ public class NavSimulation : MonoBehaviour {
 	}
 
 	void runAStarSimulationOnTiled() {
-//		print("A* singlethreaded simulation on tiled");
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
 			agents[i].transform.position = startPositions[i,simulationsRunSoFar];
 			targets[i].transform.position = targetPositions[i,simulationsRunSoFar];
@@ -113,7 +100,6 @@ public class NavSimulation : MonoBehaviour {
 
 	void runAStarSimulationOnTiledMultiThread() {
 		// TODO: We are probably too fast here. Make sure were never having more than a certain ammount of threads?
-//		print("A* multithreaded simulation on tiled");
 		// Just for graphics. Might actually destroy a little bit. But is the same for every part.
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
 			agents[i].transform.position = startPositions[i,simulationsRunSoFar];
@@ -129,7 +115,6 @@ public class NavSimulation : MonoBehaviour {
 			thread[i].Start();
 		}
 		// Join threads. (Could be omitted if we were sure the computer could handle it.)
-		// There is a bug here preventing me form joining. Probably while down below. Some threads never reach index = number of simultaneous agents.
 		for(int i=0;i<coreCount;i++) {
 		 	thread[i].Join();				// halverar prestandan.
 		}
@@ -137,7 +122,6 @@ public class NavSimulation : MonoBehaviour {
 		if(simulationsRunSoFar > numberOfSimulations) {
 			simulationsRunSoFar = 0;
 		}
-		//simulationsRunSoFar %= numberOfSimulations;
 	}
 
 	void MultiThreadHelperFunction() {
@@ -151,50 +135,7 @@ public class NavSimulation : MonoBehaviour {
 			aStars[i].Setup(startPositions[i,simulationsRunSoFar], targetPositions[i,simulationsRunSoFar]);
 			aStars[i].CalculatePath();
 		}
-
-		//print("My index is: " + myIndex);
-		//int i=index++;
-		/*while(index < numberOfSimultaneousAgents) {
-			aStars[i].Setup(startPositions[i,simulationsRunSoFar], targetPositions[i,simulationsRunSoFar]);
-			aStars[i].CalculatePath();
-
-			i = Interlocked.Increment(ref index);
-			//i = index++;
-			//index++;
-		}*/
 	}
-
-/*
-	void MultiThreadHelperFunction() {
-		//for(int i=0;i<numberOfSimultaneousAgents;i++) {
-		while(index < numberOfSimultaneousAgents) {
-			//agents[i].transform.position = startPositions[i,simulationsRunSoFar];
-			//targets[i].transform.position = targetPositions[i,simulationsRunSoFar];
-			//agent.transform.position = startPositions[0,simulationsRunSoFar];
-			//target.transform.position = targetPositions[0,simulationsRunSoFar];
-
-			//Thread thread = new Thread(new ThreadStart(MultiThreadHelperFunction));
-			
-			//aStarSingleThreadedSimulationTimer.Start();
-			
-			//aStar.Setup(agents[i].transform.position, targets[i].transform.position);
-			int i=0;
-			indexSemaphore.WaitOne();
-			i = index++;
-			indexSemaphore.Release();
-			aStars[i].Setup(startPositions[i,simulationsRunSoFar], targetPositions[i,simulationsRunSoFar]);
-
-			if(aStars[i].CalculatePath()) {
-//					print("Found aStar.");
-			} else {
-//					print("Not found aStar.");
-			}
-			//aStarSingleThreadedSimulationTimer.Stop();
-
-			//++simulationsRunSoFar;
-		}
-	}*/
-
 
 	void prepareSimulations(int xSize, int zSize) {
 		startPositions = new Vector3[numberOfSimultaneousAgents, numberOfSimulations];
@@ -210,19 +151,18 @@ public class NavSimulation : MonoBehaviour {
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
 			for(int j=0;j<numberOfSimulations;j++) {
 				// Start
-				int x = Random.Range(0, xSize);// - xSize/2;
-				int z = Random.Range(0, zSize);// - zSize/2;
+				int x = Random.Range(0, xSize);
+				int z = Random.Range(0, zSize);
 				startPositions[i,j] = new Vector3(x, 0, z);
 
 				// Target
-				x = Random.Range(0, xSize);// - xSize/2;
-				z = Random.Range(0, zSize);// - zSize/2;
+				x = Random.Range(0, xSize);
+				z = Random.Range(0, zSize);
 				targetPositions[i,j] = new Vector3(x, 0, z);
 			}
 		}
 	}
 
-	// TODO: This should take the state.
 	public void SetState(GameState state) {
 		gameState = state;
 	}

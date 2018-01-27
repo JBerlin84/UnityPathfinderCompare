@@ -98,17 +98,6 @@ public class PriorityQueue<T> where T : IComparable{
 		}
 	}
 
-	// Works but slow. Make the one below work as supposed.
-	/*
-	public bool Contains(T o) {
-		for(int i=0;i<count;i++) {
-			if(list[i].Equals(o)) {
-				return true;
-			}
-		}
-		return false;
-	}*/
-
 	// Faster contains than that one above
 	// Increases memoryusage somewhat but almost doubles the speed.
 	public bool Contains(T o) {

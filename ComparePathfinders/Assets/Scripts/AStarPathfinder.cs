@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AStarPathfinder {
-
-	//Queue<Node> closedSet;
 	PriorityQueue<Node> closedSet;
 	ArrayList openSet;	// should start with one node.
-	//Hashtable openSet;
 
 	Node[,] map;
 	Node[,] cameFrom;
@@ -79,54 +76,12 @@ public class AStarPathfinder {
 			}
 		}
 
-		// Lets try and see if we can add all neighbors in straight lines from our selves that we can see.
-		// Check all nodes.
-		/*
-		for(int x=0;x<xDim;x++) {
-			for(int y=0;y<yDim;y++) {
-				// all y upwards
-				for(int ny = y-1;ny>=0;ny--) {
-					if(map[x,ny].Elevation == 0) {
-						map[x,y].AddNeighbor(map[x,ny]);
-					} else {
-						break;
-					}
-				}
-				// all y downwards
-				for(int ny = y+1;ny<yDim;ny++) {
-					if(map[x,ny].Elevation == 0) {
-						map[x,y].AddNeighbor(map[x,ny]);
-					} else {
-						break;
-					}
-				}
-				// all x left
-				for(int nx = x-1;nx>=0;nx--) {
-					if(map[nx,y].Elevation == 0) {
-						map[x,y].AddNeighbor(map[nx,y]);
-					} else {
-						break;
-					}
-				}
-				// all x right
-				for(int nx = y+1;nx<yDim;nx++) {
-					if(map[nx,y].Elevation == 0) {
-						map[x,y].AddNeighbor(map[nx,y]);
-					} else {
-						break;
-					}
-				}
-			}
-		}*/
-
 		Setup();
 	}
 
 	public void Setup(Vector3 start = new Vector3(), Vector3 goal = new Vector3()) {
-		//closedSet = new Queue<Node>();
 		closedSet = new PriorityQueue<Node>(xDim*yDim/2);
 		openSet = new ArrayList();
-		//openSet = new Hashtable();
 		cameFrom = new Node[xDim, yDim];
 
 		startNode = map[(int)start.x, (int)start.z];
@@ -146,8 +101,6 @@ public class AStarPathfinder {
 
 	public bool CalculatePath() {
 		openSet.Add(startNode);
-		//openSet.Add(startNode, startNode);
-		//Debug.Log("We start with: " + startNode.Neighbors.Count + " neighbors");
 
 		while(openSet.Count > 0) {
 			Node current = findLowestFScoreInOpenSet();
@@ -159,13 +112,7 @@ public class AStarPathfinder {
 			// If we dont hit anything, we can be sure that we can move there.
 			// get us from 3seconds to 3 ms.
 			
-//			RaycastHit hit;
-//			if(!Physics.Raycast(current.ElevatedPosition3D, (current.ElevatedPosition3D - goalNode.ElevatedPosition3D), out hit)) {
-//				return true;
-//			}
-
 			openSet.Remove(current);
-			//closedSet.Enqueue(current);
 			closedSet.Add(current);
 
 			foreach(Node neighbour in current.Neighbors) {
@@ -175,7 +122,6 @@ public class AStarPathfinder {
 
 				if(!openSet.Contains(neighbour)) {
 					openSet.Add(neighbour);
-					//openSet.Add(neighbour, neighbour);
 				}
 
 				float tentative_gScore = current.GScore + Vector3.Distance(current.Position3D, neighbour.Position3D);
@@ -202,19 +148,4 @@ public class AStarPathfinder {
 		}
 		return node;
 	}
-
-	/*
-	private Node findLowestFScoreInOpenSet() {
-		Node node = null;
-		foreach (DictionaryEntry ne in openSet) {
-			Node n = (Node)ne.Value;
-			if(node == null) {
-				node = n;
-			}
-			if(n.FScore < node.FScore) {
-				node = n;
-			}
-		}
-		return node;
-	}*/
 }

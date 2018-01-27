@@ -56,8 +56,8 @@ public class WorldGeneratorTiled : MonoBehaviour {
 
 		for (int i=0;i<worldWidth;i++) {
 			for(int j=0;j<worldHeight;j++) {
-				float xPos = i;//-worldWidth/2 + 0.5f;
-				float zPos = j;//-worldHeight/2 + 0.5f;
+				float xPos = i;
+				float zPos = j;
 				Transform o = Instantiate(world[i,j] == 0 ? ground : obstacle, new Vector3(xPos,0f,zPos), Quaternion.identity) as Transform;
 				o.parent = parent;
 			}

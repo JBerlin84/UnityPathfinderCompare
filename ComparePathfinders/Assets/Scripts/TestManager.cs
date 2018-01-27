@@ -53,7 +53,6 @@ public class TestManager : MonoBehaviour {
 		testData = new TestData();
 
 		QualitySettings.vSyncCount = 0;			// For the love of God, make sure V-Sync is off!!!!!!!
-		//Application.targetFrameRate = 200;	// We shouldn't have to use this when v-sync is off.
 		saved = false;
 	}
 
@@ -115,30 +114,9 @@ public class TestManager : MonoBehaviour {
 			nextGameStateTime = Time.time + gameStateTime;
 			warmupTimeFinish = Time.time + warmupTime;
 		}
-
-
-
-
-
-
-		// if(Time.time >= nextRecordTime) {
-		// 	int fps = fpsCounter.getFPS();
-		// 	// testData.BaselineFPS.Add(fps);	// TODO: Make sure were recording the data in the correct place.
-		// 	testData.Record(gameState, fps);
-		// }
-
-		// // Base line test is finished.
-		// if(gameState == GameState.BASE_LINE && Time.time > baseLineTest) {
-		// 	gameState = GameState.BUILT_IN_PATHFINDER;
-		// 	navigationSimulator.SetState(gameState);
-		// } else if (gameState == GameState.CLEAN_UP) {
-		// 	SimulationFinished();
-		// }
 	}
 
 	private void SetupSimulationState() {
-		// print("use stress loader: " + simulationStateSettings[currentSimulationState].useStressLoader + ", magnitude: " + simulationStateSettings[currentSimulationState].stressLoaderMagnitude + "\n" +
-		// 		"use particle system: " + simulationStateSettings[currentSimulationState].useParticleSystem + ", magnitude: " + simulationStateSettings[currentSimulationState].stressLoaderMagnitude);
 		stressLoader.gameObject.SetActive(simulationStateSettings[currentSimulationState].useStressLoader);
 		if(stressLoader.gameObject.activeSelf) {
 			stressLoader.SetBoxCount(simulationStateSettings[currentSimulationState].stressLoaderMagnitude);
@@ -159,9 +137,4 @@ public class TestManager : MonoBehaviour {
 		System.IO.File.WriteAllText(filename, data);
 		print("data saved!!");
 	}
-
-	// public void SimulationFinished() {
-	// 	print("We are now finished and are packing up everything!!!");
-	// 	print(testData.ToString());
-	// }
 }
