@@ -1,16 +1,22 @@
-﻿using System.Collections;
+﻿// File: NavSimulation.cs
+// Description: Simulate navigation with different algorithms.
+// Date: 2018-01-27
+// Written by: Jimmy Berlin
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Diagnostics;
 using System.Threading;
 
+/// <summary>
+/// Simulate navigation with different algorithms.
+/// </summary>
 [RequireComponent(typeof(WorldGeneratorTiled))]
 public class NavSimulation : MonoBehaviour {
 
-	
 	[Header("Remember to have a properly baked navigation mesh floor\n when using this script!!")]
-	
 	[Space]
 	[Space]
 
@@ -32,7 +38,6 @@ public class NavSimulation : MonoBehaviour {
 	private Transform[] targets;
 
 	// Use this for initialization
-	
 	int simulationsRunSoFar = 0;
 
 	AStarPathfinder aStar;
@@ -43,10 +48,16 @@ public class NavSimulation : MonoBehaviour {
 	int threadIndex;
 	int coreCount;
 
+    /// <summary>
+    /// Unitys version of constructor. Stores the generated world for references.
+    /// </summary>
 	void Awake() {
 		worldGeneratorTiled = GetComponent(typeof(WorldGeneratorTiled)) as WorldGeneratorTiled;
 	}
 
+    /// <summary>
+    /// Initialization of the simulator
+    /// </summary>
 	void Start() {
 		if(randomize) {
 			Random.InitState((int)System.DateTime.Now.Ticks);
@@ -65,6 +76,9 @@ public class NavSimulation : MonoBehaviour {
 		prepareSimulations(world.GetLength(0), world.GetLength(1));
 	}
 
+    /// <summary>
+    /// Run the proper simulation each update.
+    /// </summary>
 	void Update() {
 		if(gameState == GameState.BUILT_IN_PATHFINDER)
 			runBuiltInSimulationOnTiled();
@@ -74,7 +88,9 @@ public class NavSimulation : MonoBehaviour {
 			runAStarSimulationOnTiledMultiThread();
 	}
 
-	// This seems to work
+    /// <summary>
+    /// Runs the built in pathfinder from Unity
+    /// </summary>
 	void runBuiltInSimulationOnTiled() {
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
 			agents[i].transform.position = startPositions[i,simulationsRunSoFar];
@@ -85,7 +101,11 @@ public class NavSimulation : MonoBehaviour {
 		++simulationsRunSoFar;
 		simulationsRunSoFar %= numberOfSimulations;
 	}
-
+    
+    /// <summary>
+    /// Runs the A*-pathfinder created for this project.
+    /// Run in single thread
+    /// </summary>
 	void runAStarSimulationOnTiled() {
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
 			agents[i].transform.position = startPositions[i,simulationsRunSoFar];
@@ -98,6 +118,10 @@ public class NavSimulation : MonoBehaviour {
 		simulationsRunSoFar %= numberOfSimulations;
 	}
 
+    /// <summary>
+    /// Runs the A*-pathfinder created for this project.
+    /// Run in multithreaded.
+    /// </summary>
 	void runAStarSimulationOnTiledMultiThread() {
 		// TODO: We are probably too fast here. Make sure were never having more than a certain ammount of threads?
 		// Just for graphics. Might actually destroy a little bit. But is the same for every part.
@@ -124,6 +148,9 @@ public class NavSimulation : MonoBehaviour {
 		}
 	}
 
+    /// <summary>
+    /// Helper function for multi-threaded version of the path finder.
+    /// </summary>
 	void MultiThreadHelperFunction() {
 		int myIndex = Interlocked.Increment(ref threadIndex);
 
@@ -137,6 +164,12 @@ public class NavSimulation : MonoBehaviour {
 		}
 	}
 
+    /// <summary>
+    /// Helperfunction to prepare the simulation.
+    /// Creates all the agents and targets.
+    /// </summary>
+    /// <param name="xSize">x-size of the tilebased world</param>
+    /// <param name="zSize">z-size of the tilebased world</param>
 	void prepareSimulations(int xSize, int zSize) {
 		startPositions = new Vector3[numberOfSimultaneousAgents, numberOfSimulations];
 		targetPositions = new Vector3[numberOfSimultaneousAgents, numberOfSimulations];
@@ -163,6 +196,10 @@ public class NavSimulation : MonoBehaviour {
 		}
 	}
 
+    /// <summary>
+    /// Set the game state of the simulation.
+    /// </summary>
+    /// <param name="state">new state to set.</param>
 	public void SetState(GameState state) {
 		gameState = state;
 	}

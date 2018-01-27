@@ -1,10 +1,19 @@
-﻿using System;
+﻿// File: PriorityQueue.cs
+// Description: Priority queue
+// Date: 2018-01-27
+// Written by: Jimmy Berlin
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public class PriorityQueue<T> where T : IComparable{
+/// <summary>
+/// Priority queue
+/// </summary>
+/// <typeparam name="T">Type of object to store in queue. Has to be of tyoe IComparable</typeparam>
+public class PriorityQueue<T> where T : IComparable {
 
 	T[] list;
 	Hashtable table;
@@ -12,12 +21,20 @@ public class PriorityQueue<T> where T : IComparable{
 	int count;
 	public int Count { get { return count; } }
 
+    /// <summary>
+    /// Create a new Priorityqueue of Default size 100
+    /// </summary>
+    /// <param name="initialSize">if you want to set another start size than 100.</param>
 	public PriorityQueue(int initialSize = 100) {
 		list = new T[initialSize];
 		table = new Hashtable();
 		count = 0;
 	}
 
+    /// <summary>
+    /// Adds object to the priority queue
+    /// </summary>
+    /// <param name="n">object to add</param>
 	public void Add(T n) {
 		// if list is full, expand
 		if(list.Length <= count) {
@@ -36,6 +53,10 @@ public class PriorityQueue<T> where T : IComparable{
 		BubbleUp();
 	}
 
+    /// <summary>
+    /// Removes and returns the first object in the queue.
+    /// </summary>
+    /// <returns>object that was removed.</returns>
 	public T Remove() {
 		T head = list[0];
 		list[0] = list[count-1];
@@ -47,6 +68,10 @@ public class PriorityQueue<T> where T : IComparable{
 		return head;
 	}
 
+    /// <summary>
+    /// Look at the first object.
+    /// </summary>
+    /// <returns>first object in queue</returns>
 	public T Peek() {
 		return list[0];
 	}
@@ -59,6 +84,9 @@ public class PriorityQueue<T> where T : IComparable{
 		return s;
 	}
 
+    /// <summary>
+    /// Bubble up the last object to correct position in the queue.
+    /// </summary>
 	void BubbleUp() {
 		int i=count - 1;
 		int parent = (i-1)/2;
@@ -73,6 +101,9 @@ public class PriorityQueue<T> where T : IComparable{
 		}
 	}
 
+    /// <summary>
+    /// Dripple down the first object to the correct position in the queue.
+    /// </summary>
 	void drippleDown() {
 		int i=0;
 
@@ -100,6 +131,11 @@ public class PriorityQueue<T> where T : IComparable{
 
 	// Faster contains than that one above
 	// Increases memoryusage somewhat but almost doubles the speed.
+    /// <summary>
+    /// does the object exist in the queue.
+    /// </summary>
+    /// <param name="o">object to check</param>
+    /// <returns>true if the object exist in the queue, false otherwise.</returns>
 	public bool Contains(T o) {
 		return table.Contains(o);
 	}

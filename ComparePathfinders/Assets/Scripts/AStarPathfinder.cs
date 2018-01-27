@@ -1,7 +1,15 @@
-﻿using System.Collections;
+﻿// File: AStarPathfinder.cs
+// Description: Algoritm for calculating the path between two pints in an tile-based world
+// Date: 2018-01-27
+// Written by: Jimmy Berlin
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A* pathfinder for tile-world-style.
+/// </summary>
 public class AStarPathfinder {
 	PriorityQueue<Node> closedSet;
 	ArrayList openSet;	// should start with one node.
@@ -16,6 +24,10 @@ public class AStarPathfinder {
 	Node startNode;
 	Node goalNode;
 
+    /// <summary>
+    /// Configures the A* pathfinder for the world you provide.
+    /// </summary>
+    /// <param name="world">matrix of the world the path-finder should work on.</param>
 	public AStarPathfinder(int[,] world) {
 		float[,] tempWorld = new float[world.GetLength(0), world.GetLength(1)];
 		for(int x=0;x<world.GetLength(0); x++) {
@@ -27,10 +39,18 @@ public class AStarPathfinder {
 		PreConfig(tempWorld);
 	}
 
-	public AStarPathfinder(float[,] world) {
+    /// <summary>
+    /// Configures the A* pathfinder for the world you provide.
+    /// </summary>
+    /// <param name="world">matrix of the world the path-finder should work on.</param>
+    public AStarPathfinder(float[,] world) {
 		PreConfig(world);
 	}
 
+    /// <summary>
+    /// Configure the algorithm for the world
+    /// </summary>
+    /// <param name="world">matrix of the world that the path-finder should world on.</param>
 	private void PreConfig(float[,] world) {
 		xDim = world.GetLength(0);
 		yDim = world.GetLength(1);
@@ -79,6 +99,11 @@ public class AStarPathfinder {
 		Setup();
 	}
 
+    /// <summary>
+    /// Setup the pathfinder before calculating path
+    /// </summary>
+    /// <param name="start">start position</param>
+    /// <param name="goal">target position</param>
 	public void Setup(Vector3 start = new Vector3(), Vector3 goal = new Vector3()) {
 		closedSet = new PriorityQueue<Node>(xDim*yDim/2);
 		openSet = new ArrayList();
@@ -99,6 +124,10 @@ public class AStarPathfinder {
 		startNode.FScore = Vector3.Distance(start, goal);
 	}
 
+    /// <summary>
+    /// Calculates the path
+    /// </summary>
+    /// <returns></returns>
 	public bool CalculatePath() {
 		openSet.Add(startNode);
 
@@ -138,7 +167,11 @@ public class AStarPathfinder {
 		return false;
 	}
 
-	
+	/// <summary>
+	/// Finds the lowest f-score in the open set.
+    /// Slow ass implementation. Works in O(n).
+	/// </summary>
+	/// <returns></returns>
 	private Node findLowestFScoreInOpenSet() {
 		Node node = (Node)openSet[0];
 		foreach (Node n in openSet) {

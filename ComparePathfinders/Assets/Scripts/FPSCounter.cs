@@ -1,19 +1,32 @@
-﻿using System.Collections;
+﻿// File: FPSCounter.cs
+// Description: Calculates FPS of application and displays it on the screen
+// Date: 2018-01-27
+// Written by: Jimmy Berlin
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
- 
+/// <summary>
+/// Calculates FPS of application
+/// </summary>
 public class FPSCounter : MonoBehaviour
 {
 	float deltaTime = 0.0f;
 
 	float fps;
- 
+    
+    /// <summary>
+    /// stores DeltaTime
+    /// </summary>
 	void Update()
 	{
 		deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
 	}
  
+    /// <summary>
+    /// Calculates and displays FPS on the screen
+    /// </summary>
 	void OnGUI()
 	{
 		int w = Screen.width, h = Screen.height;
@@ -30,6 +43,10 @@ public class FPSCounter : MonoBehaviour
 		GUI.Label(rect, text, style);
 	}
 
+    /// <summary>
+    /// Returns current fps
+    /// </summary>
+    /// <returns>integer of current fps</returns>
 	public int getFPS() {
 		return (int) fps;
 	}

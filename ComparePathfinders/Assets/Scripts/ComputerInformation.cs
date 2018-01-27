@@ -1,7 +1,14 @@
-﻿//using System.Diagnostics;
+﻿// File: ComputerInformation.cs
+// Description: Collects as much information about your computer as possible.
+// Date: 2018-01-27
+// Written by: Jimmy Berlin
+
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Collects as much information about your computer as possible
+/// </summary>
 public class ComputerInformation : MonoBehaviour {
 
 	string deviceType;
@@ -18,6 +25,9 @@ public class ComputerInformation : MonoBehaviour {
 	private float time;
 	public float measureFrequency = 1;
 
+    /// <summary>
+    /// Unitys version of constructor-sort of.
+    /// </summary>
 	void Awake () {
 		deviceType = SystemInfo.deviceType.ToString();
 		operatingSystem = SystemInfo.operatingSystem.ToString();
@@ -29,10 +39,12 @@ public class ComputerInformation : MonoBehaviour {
 		graphicsDeviceName = SystemInfo.graphicsDeviceName.ToString();
 		graphicsDeviceType = SystemInfo.graphicsDeviceType.ToString();
 		graphicsMemorySize = SystemInfo.graphicsMemorySize.ToString();
-
-		//print(ToString());
 	}
 
+    /// <summary>
+    /// Returns string with all the computer information neatly formatted
+    /// </summary>
+    /// <returns>String of computer information</returns>
 	public override string ToString() {
 		string reply = 	"Device type: " + deviceType + "\n" +
 						"Operating system: " + operatingSystem + "\n" +

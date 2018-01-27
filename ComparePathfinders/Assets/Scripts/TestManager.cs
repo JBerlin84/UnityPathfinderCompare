@@ -1,8 +1,16 @@
-﻿using System;
+﻿// File: TestManager.cs
+// Description: The brain of the simulation.
+// Date: 2018-01-27
+// Written by: Jimmy Berlin
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// The brain of the simulation. Handles all the states and everything.
+/// </summary>
 [RequireComponent(typeof(FPSCounter))]
 [RequireComponent(typeof(ComputerInformation))]
 public class TestManager : MonoBehaviour {
@@ -41,12 +49,12 @@ public class TestManager : MonoBehaviour {
 	public Vector3 particleSystemSpawnPosition;
 	public Vector3 particleSystemSpawnRotation;
 	
-
-
 	[Header("Test state settings")]
 	public SimulationStateSettings[] simulationStateSettings = new SimulationStateSettings[4];
 
-
+    /// <summary>
+    /// Create simulation
+    /// </summary>
 	void Awake () {
 		fpsCounter = gameObject.GetComponent(typeof(FPSCounter)) as FPSCounter;
 		computerInformation = gameObject.GetComponent(typeof(ComputerInformation)) as ComputerInformation;
@@ -56,7 +64,9 @@ public class TestManager : MonoBehaviour {
 		saved = false;
 	}
 
-	// Use this for initialization
+	/// <summary>
+	/// Initialize the simulation.
+	/// </summary>
 	void Start () {
 		if(QualitySettings.vSyncCount > 0)
 			QualitySettings.vSyncCount = 0;
@@ -78,7 +88,9 @@ public class TestManager : MonoBehaviour {
 		warmupTimeFinish = Time.time + warmupTime;
 	}
 	
-	// Update is called once per frame
+	/// <summary>
+	/// Update states and store data of the simulation.
+	/// </summary>
 	void Update () {
 		// Don't do anything more if were finished. Save here and exit appliation.
 		if(currentSimulationState >= simulationStateSettings.Length) {
@@ -116,6 +128,9 @@ public class TestManager : MonoBehaviour {
 		}
 	}
 
+    /// <summary>
+    /// Sets the simulation state to all participants that needs to know.
+    /// </summary>
 	private void SetupSimulationState() {
 		stressLoader.gameObject.SetActive(simulationStateSettings[currentSimulationState].useStressLoader);
 		if(stressLoader.gameObject.activeSelf) {
@@ -129,6 +144,9 @@ public class TestManager : MonoBehaviour {
 		}
 	}
 
+    /// <summary>
+    /// Save data to file when the simulation is finished.
+    /// </summary>
 	private void SaveDataToFile() {
 		string data = computerInformation.ToString() + "\n" + testData.ToString();
 		string filename = "test";

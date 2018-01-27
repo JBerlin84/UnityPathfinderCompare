@@ -1,7 +1,15 @@
-﻿using System.Collections;
+﻿// File: WorldGeneratorTiled.cs
+// Description: Generates a tiled world.
+// Date: 2018-01-27
+// Written by: Jimmy Berlin
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Generates a tile world.
+/// </summary>
 public class WorldGeneratorTiled : MonoBehaviour {
 
 	public string seed;
@@ -17,10 +25,16 @@ public class WorldGeneratorTiled : MonoBehaviour {
 	public Transform obstacle;
 
 	private int[,] world;	// 1 is wall, 0 is passable.
-	public int[,] World {
+    /// <summary>
+    /// Returns world matrix
+    /// </summary>
+    public int[,] World {
 		get { return world; }
 	}
 
+    /// <summary>
+    /// Creates the tile world.
+    /// </summary>
 	void Awake() {
 		if(randomize) {
 			Random.InitState((int)System.DateTime.Now.Ticks);
@@ -50,7 +64,9 @@ public class WorldGeneratorTiled : MonoBehaviour {
 		}
 	}
 
-	// Use this for initialization
+	/// <summary>
+	/// Initialize the world.
+	/// </summary>
 	void Start () {
 		Transform parent = new GameObject("Map").transform;
 
@@ -64,11 +80,12 @@ public class WorldGeneratorTiled : MonoBehaviour {
 		}
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
+    /// <summary>
+    /// Checks the connectivity of the world. We dont want any "islands" in the world.
+    /// </summary>
+    /// <param name="xPos">max xPos</param>
+    /// <param name="yPos">max yPos</param>
+    /// <returns>true if the world is connected.</returns>
 	bool CheckConnectivity(int xPos, int yPos) {
 		bool existFree = false;
 		Vector2 firstFree = new Vector2(-1f, -1f);

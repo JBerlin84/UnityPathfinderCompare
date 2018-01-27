@@ -1,12 +1,29 @@
-﻿using System.Collections.Generic;
+﻿// File: TestData.cs
+// Description: Datatype for storing test data during the simulation.
+// Date: 2018-01-27
+// Written by: Jimmy Berlin
 
+using System.Collections.Generic;
+
+/// <summary>
+/// Datatupe for storing test data during the simulation.
+/// </summary>
 public class TestData {
 	Dictionary<string, Dictionary<GameState, List<int>>> recordedData;
 
+    /// <summary>
+    /// Creates empty object.
+    /// </summary>
 	public TestData() {
 		recordedData = new Dictionary<string, Dictionary<GameState, List<int>>>();
 	}
 
+    /// <summary>
+    /// Record new data from simulation.
+    /// </summary>
+    /// <param name="simulationState">Current state of simulation.</param>
+    /// <param name="gameState">Current state of game.</param>
+    /// <param name="fps">Current fps to store.</param>
 	public void Record(string simulationState, GameState gameState, int fps) {
 
 		if(!recordedData.ContainsKey(simulationState))
@@ -22,6 +39,10 @@ public class TestData {
 		list.Add(fps);
 	}
 
+    /// <summary>
+    /// Returns a nicely formatted version of the data.
+    /// </summary>
+    /// <returns>string representation of data.</returns>
 	public override string ToString() {
 		string s = "";
 
