@@ -11,6 +11,8 @@ using UnityEngine;
 /// A* pathfinder for tile-world-style.
 /// </summary>
 public class AStarPathfinder {
+	private bool debug = true;
+
 	//PriorityQueue<Node> closedSet;
 	Hashtable closedSet;
 //	PriorityQueue<Node> openSet;	// should start with one node.
@@ -139,12 +141,10 @@ public class AStarPathfinder {
 		while(openSet.Count > 0) {
 			//Node current = openSet.Peek (); //findLowestFScoreInOpenSet();
 			Node current = findLowestFScoreInOpenSet();
-			CreateCurrentCube (current.Position3D);
-			Debug.Log (current.ToString ());
+			if(debug) CreateCurrentCube (current.Position3D);
 
 			if(current == goalNode) {
 				// TODO: Implement ReconstructPath(cameFrom, current);
-				Debug.Log("found the target");
 				return true;
 			}
 			
@@ -158,7 +158,7 @@ public class AStarPathfinder {
 
 				if(!openSet.Contains(neighbour)) {
 					openSet.Add(neighbour);
-					CreateNeighbourCube (neighbour.Position3D);
+					if (debug) CreateNeighbourCube (neighbour.Position3D);
 				}
 
 				//float tentative_gScore = current.GScore + Vector3.Distance(current.Position3D, neighbour.Position3D);
@@ -203,7 +203,6 @@ public class AStarPathfinder {
 			}
 		}
 
-		Debug.Log ("lowest f-score found:" + lowest.FScore);
 		return lowest;
 	}
 
