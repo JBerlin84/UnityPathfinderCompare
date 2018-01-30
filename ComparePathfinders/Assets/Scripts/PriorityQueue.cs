@@ -120,7 +120,7 @@ public class PriorityQueue<T> where T : IComparable {
 
 		// If the current index is larger than the child, switch.
 		if (list [i].CompareTo(list[lowest]) > 0) {
-			Node temp = list [i];
+			T temp = list [i];
 			list [i] = list [lowest];
 			list [lowest] = temp;
 			drippleDown (lowest);
@@ -170,9 +170,9 @@ public class PriorityQueue<T> where T : IComparable {
 				 // they're the same.
 				 break;
 			 }
-*/
+
 		}
-	}
+	}*/
 
 	// Faster contains than that one above
 	// Increases memoryusage somewhat but almost doubles the speed.
