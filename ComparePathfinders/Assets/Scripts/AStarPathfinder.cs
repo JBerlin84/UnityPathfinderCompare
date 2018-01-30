@@ -13,10 +13,11 @@ using UnityEngine;
 public class AStarPathfinder {
 	//PriorityQueue<Node> closedSet;
 	Hashtable closedSet;
-	PriorityQueue<Node> openSet;	// should start with one node.
+//	PriorityQueue<Node> openSet;	// should start with one node.
+	ArrayList openSet;
 
 	Node[,] map;
-	Node[,] cameFrom;
+	//Node[,] cameFrom;
 
 	int xDim;
 	int yDim;
@@ -82,7 +83,7 @@ public class AStarPathfinder {
 						map[x,y].AddNeighbor(map[x,y-1]);
 					if(y<yDim-1 && map[x,y+1].Elevation == 0)
 						map[x,y].AddNeighbor(map[x,y+1]);
-
+					
 					// Diagonally
 					if(x>0 && y>0 && map[x-1,y-1].Elevation == 0)
 						map[x,y].AddNeighbor(map[x-1,y-1]);
@@ -106,8 +107,9 @@ public class AStarPathfinder {
     /// <param name="goal">target position</param>
 	public void Setup(Vector3 start = new Vector3(), Vector3 goal = new Vector3()) {
 		closedSet = new Hashtable();
-		openSet = new PriorityQueue<Node>(xDim*yDim/2);
-		cameFrom = new Node[xDim, yDim];
+		//openSet = new PriorityQueue<Node>(xDim*yDim/2);
+		openSet = new ArrayList();
+//		cameFrom = new Node[xDim, yDim];
 
 		startNode = map[(int)start.x, (int)start.z];
 		goalNode = map[(int)goal.x, (int)goal.z];
@@ -129,21 +131,22 @@ public class AStarPathfinder {
     /// </summary>
     /// <returns></returns>
 	public bool CalculatePath() {
+		//openSet.Add(startNode);
 		openSet.Add(startNode);
 
 		while(openSet.Count > 0) {
-			Node current = openSet.Remove (); //findLowestFScoreInOpenSet();
+			//Node current = openSet.Peek (); //findLowestFScoreInOpenSet();
+			Node current = findLowestFScoreInOpenSet();
 			CreateCurrentCube (current.Position3D, Color.blue);
+			Debug.Log (current.ToString ());
 
 			if(current == goalNode) {
 				// TODO: Implement ReconstructPath(cameFrom, current);
+				Debug.Log("found the target");
 				return true;
 			}
-
-			// If we dont hit anything, we can be sure that we can move there.
-			// get us from 3seconds to 3 ms.
 			
-			//openSet.Remove(current);
+			openSet.Remove(current);
 			closedSet.Add(current, current);
 
 			foreach(Node neighbour in current.Neighbors) {
@@ -156,18 +159,29 @@ public class AStarPathfinder {
 					CreateNeighbourCube (neighbour.Position3D, Color.green);
 				}
 
-				float tentative_gScore = current.GScore + Vector3.Distance(current.Position3D, neighbour.Position3D);
+				//float tentative_gScore = current.GScore + Vector3.Distance(current.Position3D, neighbour.Position3D);
+				float tentative_gScore = current.GScore + 1; //Distance to neighbour
 				if(tentative_gScore >= neighbour.GScore) {
 					continue;	// This is not a better path
 				}
 
-				cameFrom[neighbour.X, neighbour.Y] = current;
+//				cameFrom[neighbour.X, neighbour.Y] = current;
 				neighbour.GScore = tentative_gScore;
-				neighbour.FScore = neighbour.GScore + Vector3.Distance(neighbour.Position3D, goalNode.Position3D);
+				//neighbour.FScore = neighbour.GScore + Vector3.Distance(neighbour.Position3D, goalNode.Position3D);
+				neighbour.FScore = HeuristicCost(neighbour.Position3D, goalNode.Position3D);  // TODO: We need to update this shit!
 			}
 		}
 
 		return false;
+	}
+
+	// Calculated with manhattan method.
+	private int HeuristicCost(Vector3 a, Vector3 b) {
+		int cost = (int)(Mathf.Abs (a.x - b.x)/2 + Mathf.Abs (a.z - b.z)/2);
+		Debug.Log ("Heuristic cost: " + a.ToString () + ":" + b.ToString () + " = " + cost);
+		//return (int)Mathf.Sqrt(Mathf.Abs (a.x - b.x)*Mathf.Abs (a.x - b.x) + Mathf.Abs (a.z - b.z)*Mathf.Abs (a.z - b.z));
+		return cost;
+
 	}
 
 	/// <summary>
@@ -175,15 +189,21 @@ public class AStarPathfinder {
     /// Slow ass implementation. Works in O(n).
 	/// </summary>
 	/// <returns>Node with lowest f-score</returns>
-/*	private Node findLowestFScoreInOpenSet() {
-		Node node = (Node)openSet[0];
+	private Node findLowestFScoreInOpenSet() {
+		Node lowest = null;
+
 		foreach (Node n in openSet) {
-			if(n.FScore < node.FScore) {
-				node = n;
+			if (lowest == null) {
+				lowest = n;
+			}
+			if (n.FScore < lowest.FScore) {
+				lowest = n;
 			}
 		}
-		return node;
-	}*/
+
+		Debug.Log ("lowest f-score found:" + lowest.FScore);
+		return lowest;
+	}
 
 
 	private void CreateCurrentCube(Vector3 position, Color color) {

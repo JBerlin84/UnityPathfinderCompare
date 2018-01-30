@@ -70,6 +70,24 @@ public class PriorityQueue<T> where T : IComparable {
 		return list[0];
 	}
 
+	// Slow af, needs to be sped up! Hashtable mayhaps.
+	public void Update(T n) {
+		for (int i = 0; i < count; i++) {
+			int left = 2*i+1;
+			if (left < count && list [i].CompareTo (list [left]) > 0) {	// We are bigger than left child, need to drizzle from here
+				Debug.Log("we dripple down");
+				drippleDown (i);
+				//return;
+			}
+			int right = 2 * 1 + 2;
+			if (right < count && list [i].CompareTo (list [right]) > 0) { // We are bigger than right child, need to drizzle from here.
+				Debug.Log("We dripple down");
+				drippleDown (i);
+				//return;
+			}
+		}
+	}
+
 	public override string ToString() {
 		string s = "Content: ";
 		for(int i=0;i<count;i++) {
@@ -194,4 +212,8 @@ public class PriorityQueue<T> where T : IComparable {
 
 		return false;
 	}
+
+	public T[] getList() {
+		return list;
+	} 
 }

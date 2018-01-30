@@ -17,22 +17,7 @@ public class DebugNavSimulation : MonoBehaviour {
 	void Awake() {
 		worldGeneratorTiled = GetComponent(typeof(DebugWorldGeneratorTiled)) as DebugWorldGeneratorTiled;
 
-
-		PriorityQueue<Node> testQueue = new PriorityQueue<Node> ();
-
-		for (int i = 0; i < 25; i++) {
-			Node n = new Node (Vector3.one);
-			n.FScore = Random.Range (0, 25);
-			testQueue.Add (n);
-			Debug.Log ("Added node: " + n + " with f-score: " + n.FScore);
-		}
-
-		Debug.Log (testQueue.ToString ());
-
-		while (testQueue.Count > 0)
-			Debug.Log (testQueue.Remove ().FScore);
-
-		run = false;
+		run = true;
 	}
 
 	void Start() {
