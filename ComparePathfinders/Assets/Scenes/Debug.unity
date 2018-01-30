@@ -174,7 +174,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   start: {x: 2, y: 0, z: 2}
-  goal: {x: 12, y: 0, z: 12}
+  goal: {x: 12, y: 0, z: 20}
 --- !u!1 &754519793
 GameObject:
   m_ObjectHideFlags: 0

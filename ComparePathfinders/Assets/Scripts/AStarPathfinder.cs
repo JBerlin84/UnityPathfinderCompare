@@ -8,14 +8,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// A* pathfinder for tile-world-style.
+/// A* pathfinder for tile-world.
 /// </summary>
 public class AStarPathfinder {
 	private bool debug = true;
 
-	//PriorityQueue<Node> closedSet;
 	Hashtable closedSet;
-//	PriorityQueue<Node> openSet;	// should start with one node.
 	ArrayList openSet;
 
 	Node[,] map;
@@ -111,7 +109,6 @@ public class AStarPathfinder {
     /// <param name="goal">target position</param>
 	public void Setup(Vector3 start = new Vector3(), Vector3 goal = new Vector3()) {
 		closedSet = new Hashtable();
-		//openSet = new PriorityQueue<Node>(xDim*yDim/2);
 		openSet = new ArrayList();
 //		cameFrom = new Node[xDim, yDim];
 
@@ -135,11 +132,9 @@ public class AStarPathfinder {
     /// </summary>
     /// <returns></returns>
 	public bool CalculatePath() {
-		//openSet.Add(startNode);
 		openSet.Add(startNode);
 
 		while(openSet.Count > 0) {
-			//Node current = openSet.Peek (); //findLowestFScoreInOpenSet();
 			Node current = findLowestFScoreInOpenSet();
 			if(debug) CreateCurrentCube (current.Position3D);
 
@@ -161,7 +156,7 @@ public class AStarPathfinder {
 					if (debug) CreateNeighbourCube (neighbour.Position3D);
 				}
 
-				//float tentative_gScore = current.GScore + Vector3.Distance(current.Position3D, neighbour.Position3D);
+				
 				float tentative_gScore = current.GScore + Vector3.Distance(current.Position3D, neighbour.Position3D); //Distance to neighbour
 				if(tentative_gScore >= neighbour.GScore) {
 					continue;	// This is not a better path
@@ -169,21 +164,11 @@ public class AStarPathfinder {
 
 //				cameFrom[neighbour.X, neighbour.Y] = current;
 				neighbour.GScore = tentative_gScore;
-				//neighbour.FScore = neighbour.GScore + Vector3.Distance(neighbour.Position3D, goalNode.Position3D);
 				neighbour.FScore = neighbour.GScore + Vector3.Distance(neighbour.Position3D, goalNode.Position3D) * 2; //HeuristicCost(neighbour.Position3D, goalNode.Position3D);  // TODO: We need to update this shit!
 			}
 		}
 
 		return false;
-	}
-
-	// Calculated with manhattan method.
-	private int HeuristicCost(Vector3 a, Vector3 b) {
-		int cost = (int)(Mathf.Abs (a.x - b.x)/2 + Mathf.Abs (a.z - b.z)/2);
-		Debug.Log ("Heuristic cost: " + a.ToString () + ":" + b.ToString () + " = " + cost);
-		//return (int)Mathf.Sqrt(Mathf.Abs (a.x - b.x)*Mathf.Abs (a.x - b.x) + Mathf.Abs (a.z - b.z)*Mathf.Abs (a.z - b.z));
-		return cost;
-
 	}
 
 	/// <summary>
@@ -192,12 +177,9 @@ public class AStarPathfinder {
 	/// </summary>
 	/// <returns>Node with lowest f-score</returns>
 	private Node findLowestFScoreInOpenSet() {
-		Node lowest = null;
+		Node lowest = (Node)openSet[0];
 
 		foreach (Node n in openSet) {
-			if (lowest == null) {
-				lowest = n;
-			}
 			if (n.FScore < lowest.FScore) {
 				lowest = n;
 			}
