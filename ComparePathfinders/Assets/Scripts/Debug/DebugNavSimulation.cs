@@ -14,6 +14,13 @@ public class DebugNavSimulation : MonoBehaviour {
 
 	bool run;
 
+	//////////////////////////////////////////////////
+	//some variables for debugging and displaying.
+	[Header("For debugging and testing")]
+	public float epsilon = 0.99f;
+	public bool debugDisplay = true;
+	///////////////////////////////////////////////////
+
 	void Awake() {
 		worldGeneratorTiled = GetComponent(typeof(DebugWorldGeneratorTiled)) as DebugWorldGeneratorTiled;
 
@@ -22,16 +29,31 @@ public class DebugNavSimulation : MonoBehaviour {
 
 	void Start() {
 		world = worldGeneratorTiled.World;
-		aStar = new AStarPathfinder (world);
+		aStar = new AStarPathfinder (world, epsilon, debugDisplay);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (run) {
 			aStar.Setup (start, goal);
-			aStar.CalculatePath ();
+			ArrayList path;
+			aStar.CalculatePath (out path);
+
+			if(debugDisplay) {
+				foreach(Node n in path) {
+					CreateCube(n.Position3D);
+				}
+			}
 
 			run = false;
 		}
+	}
+
+	void CreateCube(Vector3 position) {
+		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		Renderer r = cube.GetComponent<Renderer> ();
+		r.material.color = Color.yellow;
+		cube.transform.position = position;
+		cube.transform.localScale = Vector3.one * 1.2f;
 	}
 }

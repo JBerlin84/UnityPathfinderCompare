@@ -111,8 +111,10 @@ public class NavSimulation : MonoBehaviour {
 			agents[i].transform.position = startPositions[i,simulationsRunSoFar];
 			targets[i].transform.position = targetPositions[i,simulationsRunSoFar];
 
+			ArrayList path;
+
 			aStar.Setup(agents[i].transform.position, targets[i].transform.position);
-			aStar.CalculatePath();
+			aStar.CalculatePath(out path);
 		}
 		++simulationsRunSoFar;
 		simulationsRunSoFar %= numberOfSimulations;
@@ -159,8 +161,9 @@ public class NavSimulation : MonoBehaviour {
 		int max = min + range;
 
 		for(int i=min;i<max;i++) {
+			ArrayList path;
 			aStars[i].Setup(startPositions[i,simulationsRunSoFar], targetPositions[i,simulationsRunSoFar]);
-			aStars[i].CalculatePath();
+			aStars[i].CalculatePath(out path);
 		}
 	}
 

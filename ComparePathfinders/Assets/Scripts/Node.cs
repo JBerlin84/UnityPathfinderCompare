@@ -23,6 +23,12 @@ class Node : IComparable {
     /// </summary>
 	public float FScore { get { return fScore; } set { fScore = value; } }
 
+    Node from;
+    /// <summary>
+    /// Return which node we came from.
+    /// </summary>
+    public Node From { get { return from; } set { from = value; } }
+
 	ArrayList neighbors;
     /// <summary>
     /// Fetch all accessible neighbors of the node.
