@@ -11,13 +11,13 @@ using UnityEngine;
 /// A* pathfinder for tile-world.
 /// </summary>
 public class AStarPathfinder {
-	private bool debug = true;
+	private bool debug = false;
 
 	Hashtable closedSet;
 	ArrayList openSet;
 
 	Node[,] map;
-	//Node[,] cameFrom;
+	Node[,] cameFrom;
 
 	int xDim;
 	int yDim;
@@ -110,7 +110,7 @@ public class AStarPathfinder {
 	public void Setup(Vector3 start = new Vector3(), Vector3 goal = new Vector3()) {
 		closedSet = new Hashtable();
 		openSet = new ArrayList();
-//		cameFrom = new Node[xDim, yDim];
+		cameFrom = new Node[xDim, yDim];
 
 		startNode = map[(int)start.x, (int)start.z];
 		goalNode = map[(int)goal.x, (int)goal.z];
@@ -162,9 +162,9 @@ public class AStarPathfinder {
 					continue;	// This is not a better path
 				}
 
-//				cameFrom[neighbour.X, neighbour.Y] = current;
+				cameFrom[neighbour.X, neighbour.Y] = current;
 				neighbour.GScore = tentative_gScore;
-				neighbour.FScore = neighbour.GScore + Vector3.Distance(neighbour.Position3D, goalNode.Position3D) * 2; //HeuristicCost(neighbour.Position3D, goalNode.Position3D);  // TODO: We need to update this shit!
+				neighbour.FScore = neighbour.GScore + Vector3.Distance(neighbour.Position3D, goalNode.Position3D)*5f; // Epsilon is here. Change to try different optimality.
 			}
 		}
 
