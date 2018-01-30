@@ -20,6 +20,12 @@ public class AStarPathfinder {
 	int xDim;
 	int yDim;
 
+	GameObject closedCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+	GameObject openCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+
+//	GameObject neighbour = UnityEngine.MonoBehaviour.Instantiate(closedCube) as GameObject;
+
 
 	Node startNode;
 	Node goalNode;
@@ -143,6 +149,8 @@ public class AStarPathfinder {
 			
 			openSet.Remove(current);
 			closedSet.Add(current);
+			Object.Instantiate (closedCube, current.Position3D, Quaternion.identity);
+			Debug.Break();
 
 			foreach(Node neighbour in current.Neighbors) {
 				if(closedSet.Contains(neighbour)) {

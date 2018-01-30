@@ -40,7 +40,7 @@ public class NavSimulation : MonoBehaviour {
 	// Use this for initialization
 	int simulationsRunSoFar = 0;
 
-	AStarPathfinder aStar;
+	AStarPathfinder aStar;	// TODO: Remove this?? Dont seem to be used! (Except for in extended class)
 	AStarPathfinder[] aStars;
 
 	private GameState gameState;

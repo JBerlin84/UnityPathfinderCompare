@@ -24,7 +24,7 @@ public class WorldGeneratorTiled : MonoBehaviour {
 	public Transform navigationFloor;
 	public Transform obstacle;
 
-	private int[,] world;	// 1 is wall, 0 is passable.
+	protected int[,] world;	// 1 is wall, 0 is passable.
     /// <summary>
     /// Returns world matrix
     /// </summary>
