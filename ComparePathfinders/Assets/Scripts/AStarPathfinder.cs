@@ -20,13 +20,6 @@ public class AStarPathfinder {
 	int xDim;
 	int yDim;
 
-	GameObject closedCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-	GameObject openCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
-
-//	GameObject neighbour = UnityEngine.MonoBehaviour.Instantiate(closedCube) as GameObject;
-
-
 	Node startNode;
 	Node goalNode;
 
@@ -135,10 +128,13 @@ public class AStarPathfinder {
     /// </summary>
     /// <returns></returns>
 	public bool CalculatePath() {
+		Debug.Log ("Calculates path");
 		openSet.Add(startNode);
 
 		while(openSet.Count > 0) {
 			Node current = findLowestFScoreInOpenSet();
+			CreateCurrentCube (current.Position3D, Color.blue);
+
 			if(current == goalNode) {
 				// TODO: Implement ReconstructPath(cameFrom, current);
 				return true;
@@ -149,8 +145,6 @@ public class AStarPathfinder {
 			
 			openSet.Remove(current);
 			closedSet.Add(current);
-			Object.Instantiate (closedCube, current.Position3D, Quaternion.identity);
-			Debug.Break();
 
 			foreach(Node neighbour in current.Neighbors) {
 				if(closedSet.Contains(neighbour)) {
@@ -159,6 +153,7 @@ public class AStarPathfinder {
 
 				if(!openSet.Contains(neighbour)) {
 					openSet.Add(neighbour);
+					CreateNeighbourCube (neighbour.Position3D, Color.green);
 				}
 
 				float tentative_gScore = current.GScore + Vector3.Distance(current.Position3D, neighbour.Position3D);
@@ -179,7 +174,7 @@ public class AStarPathfinder {
 	/// Finds the lowest f-score in the open set.
     /// Slow ass implementation. Works in O(n).
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>Node with lowest f-score</returns>
 	private Node findLowestFScoreInOpenSet() {
 		Node node = (Node)openSet[0];
 		foreach (Node n in openSet) {
@@ -188,5 +183,21 @@ public class AStarPathfinder {
 			}
 		}
 		return node;
+	}
+
+
+	private void CreateCurrentCube(Vector3 position, Color color) {
+		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		Renderer r = cube.GetComponent<Renderer> ();
+		r.material.color = color;
+		cube.transform.position = position;
+	}
+
+	private void CreateNeighbourCube(Vector3 position, Color color) {
+		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+		Renderer r = cube.GetComponent<Renderer> ();
+		r.material.color = color;
+		cube.transform.position = position;
+		cube.transform.localScale = Vector3.one * 0.7f;
 	}
 }

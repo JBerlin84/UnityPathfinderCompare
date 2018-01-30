@@ -24,6 +24,7 @@ public class DebugWorldGeneratorTiled : WorldGeneratorTiled {
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 		};
+
 		worldWidth = world.GetLength (0);
 		worldHeight = world.GetLength (1);
 

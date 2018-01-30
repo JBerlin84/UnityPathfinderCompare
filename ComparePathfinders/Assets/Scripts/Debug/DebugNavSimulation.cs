@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(DebugWorldGeneratorTiled))]
 public class DebugNavSimulation : MonoBehaviour {
 
 	public Vector3 start;
@@ -14,9 +15,26 @@ public class DebugNavSimulation : MonoBehaviour {
 	bool run;
 
 	void Awake() {
-		worldGeneratorTiled = GetComponent(typeof(WorldGeneratorTiled)) as WorldGeneratorTiled;
+		worldGeneratorTiled = GetComponent(typeof(DebugWorldGeneratorTiled)) as DebugWorldGeneratorTiled;
 
-		run = true;
+
+		PriorityQueue<int> testQueue = new PriorityQueue<int> ();
+
+
+		for (int i = 0; i < 25; i++) {
+			Node n = new Node (Vector3.one);
+			n.FScore = Random.Range (0, 25);
+			testQueue.Add (n);
+		}
+
+
+
+		while (testQueue.Count > 0)
+			Debug.Log (testQueue.Remove ());
+
+		Debug.Log (s);
+
+		run = false;
 	}
 
 	void Start() {
