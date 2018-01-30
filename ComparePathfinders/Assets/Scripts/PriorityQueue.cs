@@ -16,7 +16,6 @@ using UnityEngine;
 public class PriorityQueue<T> where T : IComparable {
 
 	T[] list;
-	Hashtable table;
 
 	int count;
 	public int Count { get { return count; } }
@@ -27,7 +26,6 @@ public class PriorityQueue<T> where T : IComparable {
     /// <param name="initialSize">if you want to set another start size than 100.</param>
 	public PriorityQueue(int initialSize = 100) {
 		list = new T[initialSize];
-		table = new Hashtable();
 		count = 0;
 	}
 
@@ -48,8 +46,6 @@ public class PriorityQueue<T> where T : IComparable {
 		list[count] = n;
 		++count;
 
-		table.Add(n,n);
-
 		BubbleUp();
 	}
 
@@ -63,8 +59,6 @@ public class PriorityQueue<T> where T : IComparable {
 		--count;
 		drippleDown();
 		
-		table.Remove(head);
-
 		return head;
 	}
 
@@ -79,7 +73,7 @@ public class PriorityQueue<T> where T : IComparable {
 	public override string ToString() {
 		string s = "Content: ";
 		for(int i=0;i<count;i++) {
-			s = s+list[i] + ", ";
+			s = s + (string)list [i].ToString () + ", ";
 		}
 		return s;
 	}
@@ -104,20 +98,70 @@ public class PriorityQueue<T> where T : IComparable {
     /// <summary>
     /// Dripple down the first object to the correct position in the queue.
     /// </summary>
-	void drippleDown() {
+	void drippleDown(int i = 0) {
+		int left = 2 * i + 1;
+		int right = 2 * i + 2;
+		int lowest = 0;
+
+		// Find the index of the lowest child.
+		if (right >= count) {
+			if (left >= count) {
+				return;
+			} else {
+				lowest = left;
+			}
+		} else {
+			if (list [left].CompareTo (list [right]) < 0) {
+				lowest = left;
+			} else {
+				lowest = right;
+			}
+		}
+
+		// If the current index is larger than the child, switch.
+		if (list [i].CompareTo(list[lowest]) > 0) {
+			Node temp = list [i];
+			list [i] = list [lowest];
+			list [lowest] = temp;
+			drippleDown (lowest);
+		}
+			
+	}
+/*
+
+
 		int i=0;
 
-		while(i<=count) {
+		while(i<count) {
 			int left = 2 * i + 1;
 			int right = 2 * i + 2;
 
-			// Left child is smaller
-	 		if(list.Length >= 3 && list[left].CompareTo(list[right]) < 0) {
+			// Is left or right child smallest?
+			if(right < count && list[right].CompareTo(list[left]) > 0) { 		// Right child is smallest
+				if(list[i].CompareTo(list[right]) > 0) {					 	// i:th element is larger than right
+					T temp = list[i];
+					list[i] = list[right];
+					list[right] = temp;
+					i=right;
+				} else {
+					break;
+				}
+			} else if (left < count && list[i].CompareTo(list[left]) > 0) {		// i:th element is larger than left
 				T temp = list[i];
 				list[i] = list[left];
 				list[left] = temp;
 				i = left;
-			 } else if (list.Length >= 3 && list[left].CompareTo(list[right]) > 0) {	// Right child.
+			} else {															// otherwise, i:th element is larger than both
+				break;
+			}
+/*
+			// Left child is smaller
+	 		if(count >= 3 && list[left].CompareTo(list[right]) < 0) {
+				T temp = list[i];
+				list[i] = list[left];
+				list[left] = temp;
+				i = left;
+			 } else if (count >= 3 && list[left].CompareTo(list[right]) > 0) {	// Right child.
 				T temp = list[i];
 				list[i] = list[left];
 				list[left] = temp;
@@ -126,6 +170,7 @@ public class PriorityQueue<T> where T : IComparable {
 				 // they're the same.
 				 break;
 			 }
+*/
 		}
 	}
 
@@ -136,7 +181,17 @@ public class PriorityQueue<T> where T : IComparable {
     /// </summary>
     /// <param name="o">object to check</param>
     /// <returns>true if the object exist in the queue, false otherwise.</returns>
+//	public bool Contains(T o) {
+//		return table.Contains(o);
+//	}
+
 	public bool Contains(T o) {
-		return table.Contains(o);
+		for (int i = 0; i < count; i++) {
+			if (list [i].CompareTo(o) == 0) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

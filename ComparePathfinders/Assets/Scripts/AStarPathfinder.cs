@@ -11,8 +11,9 @@ using UnityEngine;
 /// A* pathfinder for tile-world-style.
 /// </summary>
 public class AStarPathfinder {
-	PriorityQueue<Node> closedSet;
-	ArrayList openSet;	// should start with one node.
+	//PriorityQueue<Node> closedSet;
+	Hashtable closedSet;
+	PriorityQueue<Node> openSet;	// should start with one node.
 
 	Node[,] map;
 	Node[,] cameFrom;
@@ -104,8 +105,8 @@ public class AStarPathfinder {
     /// <param name="start">start position</param>
     /// <param name="goal">target position</param>
 	public void Setup(Vector3 start = new Vector3(), Vector3 goal = new Vector3()) {
-		closedSet = new PriorityQueue<Node>(xDim*yDim/2);
-		openSet = new ArrayList();
+		closedSet = new Hashtable();
+		openSet = new PriorityQueue<Node>(xDim*yDim/2);
 		cameFrom = new Node[xDim, yDim];
 
 		startNode = map[(int)start.x, (int)start.z];
@@ -128,11 +129,10 @@ public class AStarPathfinder {
     /// </summary>
     /// <returns></returns>
 	public bool CalculatePath() {
-		Debug.Log ("Calculates path");
 		openSet.Add(startNode);
 
 		while(openSet.Count > 0) {
-			Node current = findLowestFScoreInOpenSet();
+			Node current = openSet.Remove (); //findLowestFScoreInOpenSet();
 			CreateCurrentCube (current.Position3D, Color.blue);
 
 			if(current == goalNode) {
@@ -143,8 +143,8 @@ public class AStarPathfinder {
 			// If we dont hit anything, we can be sure that we can move there.
 			// get us from 3seconds to 3 ms.
 			
-			openSet.Remove(current);
-			closedSet.Add(current);
+			//openSet.Remove(current);
+			closedSet.Add(current, current);
 
 			foreach(Node neighbour in current.Neighbors) {
 				if(closedSet.Contains(neighbour)) {
@@ -175,7 +175,7 @@ public class AStarPathfinder {
     /// Slow ass implementation. Works in O(n).
 	/// </summary>
 	/// <returns>Node with lowest f-score</returns>
-	private Node findLowestFScoreInOpenSet() {
+/*	private Node findLowestFScoreInOpenSet() {
 		Node node = (Node)openSet[0];
 		foreach (Node n in openSet) {
 			if(n.FScore < node.FScore) {
@@ -183,7 +183,7 @@ public class AStarPathfinder {
 			}
 		}
 		return node;
-	}
+	}*/
 
 
 	private void CreateCurrentCube(Vector3 position, Color color) {
