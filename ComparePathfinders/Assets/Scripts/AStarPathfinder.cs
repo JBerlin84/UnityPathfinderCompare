@@ -84,15 +84,17 @@ public class AStarPathfinder {
 					if(y<yDim-1 && map[x,y+1].Elevation == 0)
 						map[x,y].AddNeighbor(map[x,y+1]);
 					
+					
 					// Diagonally
 					if(x>0 && y>0 && map[x-1,y-1].Elevation == 0)
 						map[x,y].AddNeighbor(map[x-1,y-1]);
-					if(x>0 && y<0 && map[x-1,y+1].Elevation == 0)
+					if(x>0 && y<yDim-1 && map[x-1,y+1].Elevation == 0)
 						map[x,y].AddNeighbor(map[x-1,y+1]);
-					if(x<0 && y>0 && map[x+1,y-1].Elevation == 0)
+					if(x<xDim-1 && y>0 && map[x+1,y-1].Elevation == 0)
 						map[x,y].AddNeighbor(map[x+1,y-1]);
-					if(x<0 && y<0 && map[x+1,y+1].Elevation == 0)
+					if(x<xDim-1 && y<yDim-1 && map[x+1,y+1].Elevation == 0)
 						map[x,y].AddNeighbor(map[x+1,y+1]); 
+						
 				}
 			}
 		}
@@ -137,7 +139,7 @@ public class AStarPathfinder {
 		while(openSet.Count > 0) {
 			//Node current = openSet.Peek (); //findLowestFScoreInOpenSet();
 			Node current = findLowestFScoreInOpenSet();
-			CreateCurrentCube (current.Position3D, Color.blue);
+			CreateCurrentCube (current.Position3D);
 			Debug.Log (current.ToString ());
 
 			if(current == goalNode) {
@@ -156,11 +158,11 @@ public class AStarPathfinder {
 
 				if(!openSet.Contains(neighbour)) {
 					openSet.Add(neighbour);
-					CreateNeighbourCube (neighbour.Position3D, Color.green);
+					CreateNeighbourCube (neighbour.Position3D);
 				}
 
 				//float tentative_gScore = current.GScore + Vector3.Distance(current.Position3D, neighbour.Position3D);
-				float tentative_gScore = current.GScore + 1; //Distance to neighbour
+				float tentative_gScore = current.GScore + Vector3.Distance(current.Position3D, neighbour.Position3D); //Distance to neighbour
 				if(tentative_gScore >= neighbour.GScore) {
 					continue;	// This is not a better path
 				}
@@ -168,7 +170,7 @@ public class AStarPathfinder {
 //				cameFrom[neighbour.X, neighbour.Y] = current;
 				neighbour.GScore = tentative_gScore;
 				//neighbour.FScore = neighbour.GScore + Vector3.Distance(neighbour.Position3D, goalNode.Position3D);
-				neighbour.FScore = HeuristicCost(neighbour.Position3D, goalNode.Position3D);  // TODO: We need to update this shit!
+				neighbour.FScore = neighbour.GScore + Vector3.Distance(neighbour.Position3D, goalNode.Position3D) * 2; //HeuristicCost(neighbour.Position3D, goalNode.Position3D);  // TODO: We need to update this shit!
 			}
 		}
 
@@ -206,17 +208,17 @@ public class AStarPathfinder {
 	}
 
 
-	private void CreateCurrentCube(Vector3 position, Color color) {
+	private void CreateCurrentCube(Vector3 position) {
 		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		Renderer r = cube.GetComponent<Renderer> ();
-		r.material.color = color;
+		r.material.color = Color.blue;
 		cube.transform.position = position;
 	}
 
-	private void CreateNeighbourCube(Vector3 position, Color color) {
+	private void CreateNeighbourCube(Vector3 position) {
 		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		Renderer r = cube.GetComponent<Renderer> ();
-		r.material.color = color;
+		r.material.color = Color.green;
 		cube.transform.position = position;
 		cube.transform.localScale = Vector3.one * 0.7f;
 	}
