@@ -70,11 +70,7 @@ public class AStarPathfinder {
 		}
 
 		// Adds all the neighbors.
-		// TODO: This needs to be better. Only adds fourn eighbors now.
-		// TODO: Do i want this here or in Node?
-		
-		// TODO: Some cleanup here!
-		
+		// TODO: Do i want this here or in Node?		
 		for(int x=0;x<xDim;x++) {
 			for(int y=0;y<yDim;y++) {
 				if(map[x,y].Elevation == 0) {	// Make sure that we can walk on the tile that we are.
@@ -133,7 +129,7 @@ public class AStarPathfinder {
     /// <summary>
     /// Calculates the path
     /// </summary>
-    /// <returns></returns>
+    /// <returns>true if a path was found, false otherwise.</returns>
 	public bool CalculatePath(out ArrayList path) {
 		path = null;
 		openSet.Add(startNode);
