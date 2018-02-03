@@ -19,6 +19,8 @@ public class DebugNavSimulation : MonoBehaviour {
 	[Header("For debugging and testing")]
 	public float epsilon = 0.99f;
 	public bool debugDisplay = true;
+    public Weighting weighting = Weighting.None;
+    public float fillrate = 0.5f;
 	///////////////////////////////////////////////////
 
 	void Awake() {
@@ -29,7 +31,7 @@ public class DebugNavSimulation : MonoBehaviour {
 
 	void Start() {
 		world = worldGeneratorTiled.World;
-		aStar = new AStarPathfinder (world, epsilon, debugDisplay);
+		aStar = new AStarPathfinder (world, epsilon, weighting, fillrate, debugDisplay);
 	}
 	
 	// Update is called once per frame

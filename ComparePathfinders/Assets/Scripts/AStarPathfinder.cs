@@ -24,15 +24,23 @@ public class AStarPathfinder {
 	Node startNode;
 	Node goalNode;
 
+    // Variables for heuristic cost estimate.
+    public Weighting weighting;
 	float epsilon;
+    float N;                    // The anticipated length of the solution.
+    // float fillrate;
 
     /// <summary>
     /// Configures the A* pathfinder for the world you provide.
     /// </summary>
     /// <param name="world">matrix of the world the path-finder should work on.</param>
-	public AStarPathfinder(int[,] world, float epsilon = 0.99f, bool debug = false) {
+	public AStarPathfinder(int[,] world, float epsilon = 0.99f, Weighting weighting = Weighting.None, float fillrate = 0.5f, bool debug = false) {
 		this.debug = debug;
 		this.epsilon = epsilon;
+        this.weighting = weighting;
+        // this.fillrate = fillrate;
+
+        N = Mathf.Lerp(1, 5, fillrate) * Vector3.Distance(startNode.Position3D, goalNode.Position3D);    // The anticipated length is just an estimate of double the distance between the nodes;
 
 		float[,] tempWorld = new float[world.GetLength(0), world.GetLength(1)];
 		for(int x=0;x<world.GetLength(0); x++) {
@@ -164,11 +172,30 @@ public class AStarPathfinder {
 
 				neighbour.From = current;
 				neighbour.GScore = tentative_gScore;
-				neighbour.FScore = neighbour.GScore + Vector3.Distance(neighbour.Position3D, goalNode.Position3D)*epsilon; // Epsilon is here. Change to try different optimality.
+                neighbour.FScore = neighbour.GScore + h(neighbour);
 			}
 		}
 		return false;
 	}
+
+    /// <summary>
+    /// Admissible heuristic cost from node n to goal node
+    /// </summary>
+    /// <param name="n">node you want to caluclate distance from</param>
+    /// <returns>float with heuristic distance to goal node.</returns>
+    private float h(Node n, int dn = 0) {
+        if(weighting == Weighting.Dynamic) {
+            float hn = Vector3.Distance(n.Position3D, goalNode.Position3D) * 0.99f;
+
+            float wn = 1 - dn / N <= N ? 1 - dn : 0;
+
+            return (1 + epsilon * wn) * hn;
+        } else if(weighting == Weighting.Static) {
+            return Vector3.Distance(n.Position3D, goalNode.Position3D) * epsilon;
+        } else {
+            return Vector3.Distance(n.Position3D, goalNode.Position3D) * 0.99f;
+        }        
+    }
 
 	/// <summary>
 	/// Finds the lowest f-score in the open set.
@@ -200,7 +227,10 @@ public class AStarPathfinder {
 		}
 	}
 
-
+    /// <summary>
+    /// Used to create a cube representing the current position checked.
+    /// </summary>
+    /// <param name="position">position of the current cube</param>
 	private void CreateCurrentCube(Vector3 position) {
 		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		Renderer r = cube.GetComponent<Renderer> ();
@@ -208,6 +238,10 @@ public class AStarPathfinder {
 		cube.transform.position = position;
 	}
 
+    /// <summary>
+    /// Used to create a cube representing the neighbor position.
+    /// </summary>
+    /// <param name="position">neighbor position</param>
 	private void CreateNeighbourCube(Vector3 position) {
 		GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 		Renderer r = cube.GetComponent<Renderer> ();
