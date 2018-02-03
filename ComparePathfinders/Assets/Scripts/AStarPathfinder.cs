@@ -28,7 +28,7 @@ public class AStarPathfinder {
     public Weighting weighting;
 	float epsilon;
     float N;                    // The anticipated length of the solution.
-    // float fillrate;
+    float fillrate;
 
     /// <summary>
     /// Configures the A* pathfinder for the world you provide.
@@ -38,9 +38,7 @@ public class AStarPathfinder {
 		this.debug = debug;
 		this.epsilon = epsilon;
         this.weighting = weighting;
-        // this.fillrate = fillrate;
-
-        N = Mathf.Lerp(1, 5, fillrate) * Vector3.Distance(startNode.Position3D, goalNode.Position3D);    // The anticipated length is just an estimate of double the distance between the nodes;
+        this.fillrate = fillrate;
 
 		float[,] tempWorld = new float[world.GetLength(0), world.GetLength(1)];
 		for(int x=0;x<world.GetLength(0); x++) {
@@ -132,6 +130,8 @@ public class AStarPathfinder {
 
 		startNode.GScore = 0;
 		startNode.FScore = Vector3.Distance(start, goal);
+
+        N = Mathf.Lerp(1, 5, fillrate) * Vector3.Distance(startNode.Position3D, goalNode.Position3D);    // The anticipated length is just an estimate of double the distance between the nodes;
 	}
 
     /// <summary>
