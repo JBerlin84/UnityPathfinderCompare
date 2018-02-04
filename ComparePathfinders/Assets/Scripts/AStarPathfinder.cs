@@ -3,6 +3,8 @@
 // Date: 2018-01-27
 // Written by: Jimmy Berlin
 
+// TODO: Mabye remove some of the ifstatements and other crap in order to speed up the stuff??
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
