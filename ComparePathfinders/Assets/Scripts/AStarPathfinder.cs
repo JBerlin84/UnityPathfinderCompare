@@ -172,7 +172,7 @@ public class AStarPathfinder {
 
 				neighbour.From = current;
 				neighbour.GScore = tentative_gScore;
-                neighbour.FScore = neighbour.GScore + h(neighbour);
+                neighbour.FScore = neighbour.GScore + h(neighbour, closedSet.Count);
 			}
 		}
 		return false;
@@ -187,7 +187,10 @@ public class AStarPathfinder {
         if(weighting == Weighting.Dynamic) {
             float hn = Vector3.Distance(n.Position3D, goalNode.Position3D) * 0.99f;
 
-            float wn = 1 - dn / N <= N ? 1 - dn : 0;
+            float wn = 0;
+            if (dn < N) {
+                wn = 1 - dn / N;
+            }
 
             return (1 + epsilon * wn) * hn;
         } else if(weighting == Weighting.Static) {

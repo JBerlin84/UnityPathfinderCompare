@@ -24,6 +24,7 @@ public class NavSimulation : MonoBehaviour {
 	public Transform target;
 	private WorldGeneratorTiled worldGeneratorTiled;
 
+    [Header("Simulation parameters")]
 	public int seed = 0;
 	public bool randomize;
 
@@ -48,6 +49,11 @@ public class NavSimulation : MonoBehaviour {
 	int threadIndex;
 	int coreCount;
 
+    [Header("A* parameters")]
+    public float epsilon;
+    public Weighting weighting;
+    public bool debug = false;
+
     /// <summary>
     /// Unitys version of constructor. Stores the generated world for references.
     /// </summary>
@@ -68,9 +74,11 @@ public class NavSimulation : MonoBehaviour {
 		aStar = new AStarPathfinder(world);
 		coreCount = SystemInfo.processorCount;
 
+        float fillrate = GetComponent<WorldGeneratorTiled>().fillPercentage;
+
 		aStars = new AStarPathfinder[numberOfSimultaneousAgents];
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
-			aStars[i] = new AStarPathfinder(world);
+			aStars[i] = new AStarPathfinder(world,epsilon,weighting,fillrate,debug);
 		}
 		
 		prepareSimulations(world.GetLength(0), world.GetLength(1));
