@@ -53,9 +53,9 @@ public class PriorityQueue<T> where T : IComparable {
 		list[count] = n;
 		++count;
 
-		BubbleUp();     // should return index.
+		int pos = BubbleUp();     // should return index.
 #if hashtable
-        table.Add(n, n);    // Add to table
+        table.Add(n, pos);    // Add to table
 #endif
 	}
 
@@ -110,7 +110,8 @@ public class PriorityQueue<T> where T : IComparable {
     /// <summary>
     /// Bubble up the last object to correct position in the queue.
     /// </summary>
-	void BubbleUp() {
+    /// <returns>index where bubbeled object is placed</returns>
+	int BubbleUp() {
 		int i=count - 1;
 		int parent = (i-1)/2;
 
@@ -122,6 +123,8 @@ public class PriorityQueue<T> where T : IComparable {
 			i = parent;
 			parent = (i-1)/2;
 		}
+
+        return i;
 	}
 
     /// <summary>
@@ -156,52 +159,6 @@ public class PriorityQueue<T> where T : IComparable {
 		}
 			
 	}
-/*
-
-
-		int i=0;
-
-		while(i<count) {
-			int left = 2 * i + 1;
-			int right = 2 * i + 2;
-
-			// Is left or right child smallest?
-			if(right < count && list[right].CompareTo(list[left]) > 0) { 		// Right child is smallest
-				if(list[i].CompareTo(list[right]) > 0) {					 	// i:th element is larger than right
-					T temp = list[i];
-					list[i] = list[right];
-					list[right] = temp;
-					i=right;
-				} else {
-					break;
-				}
-			} else if (left < count && list[i].CompareTo(list[left]) > 0) {		// i:th element is larger than left
-				T temp = list[i];
-				list[i] = list[left];
-				list[left] = temp;
-				i = left;
-			} else {															// otherwise, i:th element is larger than both
-				break;
-			}
-/*
-			// Left child is smaller
-	 		if(count >= 3 && list[left].CompareTo(list[right]) < 0) {
-				T temp = list[i];
-				list[i] = list[left];
-				list[left] = temp;
-				i = left;
-			 } else if (count >= 3 && list[left].CompareTo(list[right]) > 0) {	// Right child.
-				T temp = list[i];
-				list[i] = list[left];
-				list[left] = temp;
-				i=right;
-			 } else {
-				 // they're the same.
-				 break;
-			 }
-
-		}
-	}*/
 
 	// Faster contains than that one above
 	// Increases memoryusage somewhat but almost doubles the speed.
@@ -210,10 +167,6 @@ public class PriorityQueue<T> where T : IComparable {
     /// </summary>
     /// <param name="o">object to check</param>
     /// <returns>true if the object exist in the queue, false otherwise.</returns>
-//	public bool Contains(T o) {
-//		return table.Contains(o);
-//	}
-
 	public bool Contains(T o) {                         // Todo, this needs to be log(n) or constant.
 #if !hashtable
 		for (int i = 0; i < count; i++) {
@@ -228,6 +181,10 @@ public class PriorityQueue<T> where T : IComparable {
 #endif
 	}
 
+    /// <summary>
+    /// check wether the priority queue is ordered or not. Used for debugging
+    /// </summary>
+    /// <returns>true if the priority queue is ordered</returns>
     public bool IsConsistent() {
         if (Count == 0)
             return true;
