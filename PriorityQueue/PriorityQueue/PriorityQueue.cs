@@ -3,6 +3,8 @@
 // Date: 2018-01-27
 // Written by: Jimmy Berlin
 
+#define hashtable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,7 +21,9 @@ using UnityEngine;
 public class PriorityQueue<T> where T : IComparable {
 
 	T[] list;
+#if hashtable
     Hashtable table;        // Contains O(1), Add O(1) if table is big enough, Remove O(1)
+#endif
 
 	int count;
 	public int Count { get { return count; } }
@@ -67,7 +71,7 @@ public class PriorityQueue<T> where T : IComparable {
 		T head = list[0];
 		list[0] = list[count-1];
 		--count;
-		drippleDown();
+		DrippleDown();
 
 #if hashtable
         table.Remove(head); //remove from table
@@ -85,24 +89,19 @@ public class PriorityQueue<T> where T : IComparable {
 
 	// Slow af, needs to be sped up! Hashtable mayhaps.
 	public void Update(T n) {
-		for (int i = 0; i < count; i++) {
-			int left = 2*i+1;
-			if (left < count && list [i].CompareTo (list [left]) > 0) {	// We are bigger than left child, need to drizzle from here
-				drippleDown (i);
-				//return;
-			}
-			int right = 2 * 1 + 2;
-			if (right < count && list [i].CompareTo (list [right]) > 0) { // We are bigger than right child, need to drizzle from here.
-				drippleDown (i);
-				//return;
-			}
-		}
+        int pos = (int)table[n];
+        int parent = (pos-1)/2;
+        if (list[parent].CompareTo(list[pos]) > 0) {
+            BubbleUp(pos);
+        } else {
+            DrippleDown(pos);
+        }
 	}
 
 	public override string ToString() {
 		string s = "Content: ";
 		for(int i=0;i<count;i++) {
-			s = s + (string)list [i].ToString () + ", ";
+			s = s + (string)list [i].ToString () + "; ";
 		}
 		return s;
 	}
@@ -111,26 +110,27 @@ public class PriorityQueue<T> where T : IComparable {
     /// Bubble up the last object to correct position in the queue.
     /// </summary>
     /// <returns>index where bubbeled object is placed</returns>
-	int BubbleUp() {
-		int i=count - 1;
+	int BubbleUp(int i = -1) {
+        if (i == -1) {
+            i = count - 1;
+        }
 		int parent = (i-1)/2;
 
-		while(i > 0 && list[i].CompareTo(list[parent]) < 0) {
+		if(i > 0 && list[i].CompareTo(list[parent]) < 0) {
 			T temp = list[parent];
 			list[parent] = list[i];
 			list[i] = temp;
 
-			i = parent;
-			parent = (i-1)/2;
-		}
-
-        return i;
+            return BubbleUp(parent);
+        } else {
+            return i;   // todo, make sure that we are actually returning the correct value.
+        }
 	}
 
     /// <summary>
     /// Dripple down the first object to the correct position in the queue.
     /// </summary>
-	void drippleDown(int i = 0) {
+	void DrippleDown(int i = 0) {
 		int left = 2 * i + 1;
 		int right = 2 * i + 2;
 		int lowest = 0;
@@ -155,7 +155,7 @@ public class PriorityQueue<T> where T : IComparable {
 			T temp = list [i];
 			list [i] = list [lowest];
 			list [lowest] = temp;
-			drippleDown (lowest);
+			DrippleDown (lowest);
 		}
 			
 	}

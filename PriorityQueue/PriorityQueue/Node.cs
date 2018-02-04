@@ -29,11 +29,13 @@ class Node : IComparable {
     /// </summary>
     public Node From { get { return from; } set { from = value; } }
 
+#if Unity
 	ArrayList neighbors;
     /// <summary>
     /// Fetch all accessible neighbors of the node.
     /// </summary>
 	public ArrayList Neighbors { get { return neighbors; } }
+#endif
 
 #if Unity
 	Vector3 position3D;
@@ -47,6 +49,7 @@ class Node : IComparable {
 	public Vector3 ElevatedPosition3D { get { return new Vector3(X, 1, Y); } }
 #endif
 
+#if Unity
 	int x;
     /// <summary>
     /// Returns x-position of node
@@ -57,6 +60,7 @@ class Node : IComparable {
     /// Returns y-position of node
     /// </summary>
 	public int Y { get { return y; } }
+#endif
 
 #if Unity
     /// <summary>
@@ -82,6 +86,7 @@ class Node : IComparable {
 	}*/
 #endif
 
+#if Unity
     /// <summary>
     /// Adds accessible neighbor to node.
     /// </summary>
@@ -89,6 +94,7 @@ class Node : IComparable {
 	public void AddNeighbor(Node neighbor) {
 		neighbors.Add(neighbor);
 	}
+#endif
 
     /// <summary>
     /// CompareTo. returns whether the compared object is smaller or larger than this.
