@@ -207,7 +207,7 @@ public class AStarPathfinder {
     /// Slow ass implementation. Works in O(n).
 	/// </summary>
 	/// <returns>Node with lowest f-score</returns>
-	private Node findLowestFScoreInOpenSet() {
+	private Node findLowestFScoreInOpenSet() {          // TODO: Make this O(log n) and you're safe
 		Node lowest = (Node)openSet[0];
 
 		foreach (Node n in openSet) {
@@ -233,6 +233,7 @@ public class AStarPathfinder {
 	}
 
     /// <summary>
+    /// DEBUG:
     /// Used to create a cube representing the current position checked.
     /// </summary>
     /// <param name="position">position of the current cube</param>
@@ -244,6 +245,7 @@ public class AStarPathfinder {
 	}
 
     /// <summary>
+    /// DEBUG:
     /// Used to create a cube representing the neighbor position.
     /// </summary>
     /// <param name="position">neighbor position</param>

@@ -80,8 +80,8 @@ public class NavSimulation : MonoBehaviour {
 		for(int i=0;i<numberOfSimultaneousAgents;i++) {
 			aStars[i] = new AStarPathfinder(world,epsilon,weighting,fillrate,debug);
 		}
-		
-		prepareSimulations(world.GetLength(0), world.GetLength(1));
+
+        prepareSimulations(world.GetLength(0), world.GetLength(1));
 	}
 
     /// <summary>
