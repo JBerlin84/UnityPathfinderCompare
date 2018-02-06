@@ -32,7 +32,7 @@ public class PriorityQueue<T> where T : IComparable {
     /// Create a new Priorityqueue of Default size 100
     /// </summary>
     /// <param name="initialSize">if you want to set another start size than 100.</param>
-	public PriorityQueue(int initialSize = 100) {
+	public PriorityQueue(int initialSize = 10) {
 		list = new T[initialSize];
 #if hashtable
         table = new Hashtable(initialSize);
@@ -87,17 +87,6 @@ public class PriorityQueue<T> where T : IComparable {
 		return list[0];
 	}
 
-	// Slow af, needs to be sped up! Hashtable mayhaps.
-	public void Update(T n) {
-        int pos = (int)table[n];
-        int parent = (pos-1)/2;
-        if (list[parent].CompareTo(list[pos]) > 0) {
-            BubbleUp(pos);
-        } else {
-            DrippleDown(pos);
-        }
-	}
-
 	public override string ToString() {
 		string s = "Content: ";
 		for(int i=0;i<count;i++) {
@@ -110,7 +99,7 @@ public class PriorityQueue<T> where T : IComparable {
     /// Bubble up the last object to correct position in the queue.
     /// </summary>
     /// <returns>index where bubbeled object is placed</returns>
-	int BubbleUp(int i = -1) {
+	int BubbleUp(int i = -1) {      // if we use a hashtable we need to update every single item in the list.
         if (i == -1) {
             i = count - 1;
         }
@@ -130,7 +119,7 @@ public class PriorityQueue<T> where T : IComparable {
     /// <summary>
     /// Dripple down the first object to the correct position in the queue.
     /// </summary>
-	void DrippleDown(int i = 0) {
+	int DrippleDown(int i = 0) {
 		int left = 2 * i + 1;
 		int right = 2 * i + 2;
 		int lowest = 0;
@@ -138,7 +127,7 @@ public class PriorityQueue<T> where T : IComparable {
 		// Find the index of the lowest child.
 		if (right >= count) {
 			if (left >= count) {
-				return;
+				return i;
 			} else {
 				lowest = left;
 			}
@@ -155,9 +144,10 @@ public class PriorityQueue<T> where T : IComparable {
 			T temp = list [i];
 			list [i] = list [lowest];
 			list [lowest] = temp;
-			DrippleDown (lowest);
+			return DrippleDown (lowest);
 		}
-			
+
+        return i;   // Unreachable code. But compiler complains.
 	}
 
 	// Faster contains than that one above

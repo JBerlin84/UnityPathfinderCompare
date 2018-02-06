@@ -3,11 +3,16 @@
 // Date: 2018-01-27
 // Written by: Jimmy Berlin
 
+//#define hashtable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+
+#if Unity
 using UnityEngine;
+#endif
 
 /// <summary>
 /// Priority queue
@@ -15,195 +20,145 @@ using UnityEngine;
 /// <typeparam name="T">Type of object to store in queue. Has to be of tyoe IComparable</typeparam>
 public class PriorityQueue<T> where T : IComparable {
 
-	T[] list;
+    T[] list;
+#if hashtable
+    Hashtable table;        // Contains O(1), Add O(1) if table is big enough, Remove O(1)
+#endif
 
-	int count;
-	public int Count { get { return count; } }
+    int count;
+    public int Count { get { return count; } }
 
     /// <summary>
     /// Create a new Priorityqueue of Default size 100
     /// </summary>
     /// <param name="initialSize">if you want to set another start size than 100.</param>
-	public PriorityQueue(int initialSize = 100) {
-		list = new T[initialSize];
-		count = 0;
-	}
+    public PriorityQueue(int initialSize = 10) {
+        list = new T[initialSize];
+#if hashtable
+        table = new Hashtable(initialSize);
+#endif
+        count = 0;
+    }
 
     /// <summary>
     /// Adds object to the priority queue
     /// </summary>
     /// <param name="n">object to add</param>
-	public void Add(T n) {
-		// if list is full, expand
-		if(list.Length <= count) {
-			T[] temp = new T[count*2];
-			for(int i=0;i<count;i++) {
-				temp[i] = list[i];
-			}
-			list = temp;
-		}
+    public void Add(T n) {
+        // if list is full, expand
+        if (list.Length <= count) {
+            T[] temp = new T[count * 2];
+            for (int i = 0; i < count; i++) {
+                temp[i] = list[i];
+            }
+            list = temp;
+        }
 
-		list[count] = n;
-		++count;
+        list[count] = n;
+        ++count;
 
-		BubbleUp();
-	}
+        BubbleUp();     // should return index.
+#if hashtable
+        table.Add(n, pos);    // Add to table
+#endif
+    }
 
     /// <summary>
     /// Removes and returns the first object in the queue.
     /// </summary>
     /// <returns>object that was removed.</returns>
-	public T Remove() {
-		T head = list[0];
-		list[0] = list[count-1];
-		--count;
-		drippleDown();
-		
-		return head;
-	}
+    public T Remove() {
+        T head = list[0];
+        list[0] = list[count - 1];
+        --count;
+        DrippleDown();
+
+#if hashtable
+        table.Remove(head); //remove from table
+#endif
+        return head;
+    }
 
     /// <summary>
     /// Look at the first object.
     /// </summary>
     /// <returns>first object in queue</returns>
-	public T Peek() {
-		return list[0];
-	}
+    public T Peek() {
+        return list[0];
+    }
 
-	// Slow af, needs to be sped up! Hashtable mayhaps.
-	public void Update(T n) {
-		for (int i = 0; i < count; i++) {
-			int left = 2*i+1;
-			if (left < count && list [i].CompareTo (list [left]) > 0) {	// We are bigger than left child, need to drizzle from here
-				Debug.Log("we dripple down");
-				drippleDown (i);
-				//return;
-			}
-			int right = 2 * 1 + 2;
-			if (right < count && list [i].CompareTo (list [right]) > 0) { // We are bigger than right child, need to drizzle from here.
-				Debug.Log("We dripple down");
-				drippleDown (i);
-				//return;
-			}
-		}
-	}
-
-	public override string ToString() {
-		string s = "Content: ";
-		for(int i=0;i<count;i++) {
-			s = s + (string)list [i].ToString () + ", ";
-		}
-		return s;
-	}
+    public override string ToString() {
+        string s = "Content: ";
+        for (int i = 0; i < count; i++) {
+            s = s + (string)list[i].ToString() + "; ";
+        }
+        return s;
+    }
 
     /// <summary>
     /// Bubble up the last object to correct position in the queue.
     /// </summary>
-	void BubbleUp() {
-		int i=count - 1;
-		int parent = (i-1)/2;
+    /// <returns>index where bubbeled object is placed</returns>
+    int BubbleUp(int i = -1) {      // if we use a hashtable we need to update every single item in the list.
+        if (i == -1) {
+            i = count - 1;
+        }
+        int parent = (i - 1) / 2;
 
-		while(i > 0 && list[i].CompareTo(list[parent]) < 0) {
-			T temp = list[parent];
-			list[parent] = list[i];
-			list[i] = temp;
+        if (i > 0 && list[i].CompareTo(list[parent]) < 0) {
+            T temp = list[parent];
+            list[parent] = list[i];
+            list[i] = temp;
 
-			i = parent;
-			parent = (i-1)/2;
-		}
-	}
+            return BubbleUp(parent);
+        } else {
+            return i;   // todo, make sure that we are actually returning the correct value.
+        }
+    }
 
     /// <summary>
     /// Dripple down the first object to the correct position in the queue.
     /// </summary>
-	void drippleDown(int i = 0) {
-		int left = 2 * i + 1;
-		int right = 2 * i + 2;
-		int lowest = 0;
+    int DrippleDown(int i = 0) {
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
+        int lowest = 0;
 
-		// Find the index of the lowest child.
-		if (right >= count) {
-			if (left >= count) {
-				return;
-			} else {
-				lowest = left;
-			}
-		} else {
-			if (list [left].CompareTo (list [right]) < 0) {
-				lowest = left;
-			} else {
-				lowest = right;
-			}
-		}
+        // Find the index of the lowest child.
+        if (right >= count) {
+            if (left >= count) {
+                return i;
+            } else {
+                lowest = left;
+            }
+        } else {
+            if (list[left].CompareTo(list[right]) < 0) {
+                lowest = left;
+            } else {
+                lowest = right;
+            }
+        }
 
-		// If the current index is larger than the child, switch.
-		if (list [i].CompareTo(list[lowest]) > 0) {
-			T temp = list [i];
-			list [i] = list [lowest];
-			list [lowest] = temp;
-			drippleDown (lowest);
-		}
-			
-	}
-/*
+        // If the current index is larger than the child, switch.
+        if (list[i].CompareTo(list[lowest]) > 0) {
+            T temp = list[i];
+            list[i] = list[lowest];
+            list[lowest] = temp;
+            return DrippleDown(lowest);
+        }
 
+        return i;   // Unreachable code. But compiler complains.
+    }
 
-		int i=0;
-
-		while(i<count) {
-			int left = 2 * i + 1;
-			int right = 2 * i + 2;
-
-			// Is left or right child smallest?
-			if(right < count && list[right].CompareTo(list[left]) > 0) { 		// Right child is smallest
-				if(list[i].CompareTo(list[right]) > 0) {					 	// i:th element is larger than right
-					T temp = list[i];
-					list[i] = list[right];
-					list[right] = temp;
-					i=right;
-				} else {
-					break;
-				}
-			} else if (left < count && list[i].CompareTo(list[left]) > 0) {		// i:th element is larger than left
-				T temp = list[i];
-				list[i] = list[left];
-				list[left] = temp;
-				i = left;
-			} else {															// otherwise, i:th element is larger than both
-				break;
-			}
-/*
-			// Left child is smaller
-	 		if(count >= 3 && list[left].CompareTo(list[right]) < 0) {
-				T temp = list[i];
-				list[i] = list[left];
-				list[left] = temp;
-				i = left;
-			 } else if (count >= 3 && list[left].CompareTo(list[right]) > 0) {	// Right child.
-				T temp = list[i];
-				list[i] = list[left];
-				list[left] = temp;
-				i=right;
-			 } else {
-				 // they're the same.
-				 break;
-			 }
-
-		}
-	}*/
-
-	// Faster contains than that one above
-	// Increases memoryusage somewhat but almost doubles the speed.
+    // Faster contains than that one above
+    // Increases memoryusage somewhat but almost doubles the speed.
     /// <summary>
     /// does the object exist in the queue.
     /// </summary>
     /// <param name="o">object to check</param>
     /// <returns>true if the object exist in the queue, false otherwise.</returns>
-//	public bool Contains(T o) {
-//		return table.Contains(o);
-//	}
-
-	public bool Contains(T o) {
+    public bool Contains(T o) {                         // Todo, this needs to be log(n) or constant.
+#if !hashtable
 		for (int i = 0; i < count; i++) {
 			if (list [i].CompareTo(o) == 0) {
 				return true;
@@ -211,9 +166,41 @@ public class PriorityQueue<T> where T : IComparable {
 		}
 
 		return false;
-	}
+# else
+        return table.Contains(o);
+#endif
+    }
 
+    // Works but O(n log n) needs to be faster or make sure that we dont use this often.
+    public void Update(T o) {
+        PriorityQueue<T> temp = new PriorityQueue<T>();
+        for(int i=0;i<count;i++) {
+            temp.Add(list[i]);
+        }
+        list = temp.getList();
+    }
+
+    /// <summary>
+    /// check wether the priority queue is ordered or not. Used for debugging
+    /// </summary>
+    /// <returns>true if the priority queue is ordered</returns>
+    public bool IsConsistent() {
+        if (Count == 0)
+            return true;
+
+        for (int pi = 0; pi < Count; pi++) {
+            int lci = 2 * pi + 1;   // left child
+            int rci = 2 * pi + 2;   // right child
+            if (lci < Count && list[pi].CompareTo(list[lci]) > 0) return false;
+            if (rci < Count && list[pi].CompareTo(list[rci]) > 0) return false;
+        }
+
+        return true;
+    }
+
+    // Don't use this
+    
 	public T[] getList() {
 		return list;
-	} 
+	}
 }

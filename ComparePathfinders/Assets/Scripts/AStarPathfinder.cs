@@ -1,4 +1,6 @@
-﻿// File: AStarPathfinder.cs
+﻿// #define ArrayList
+
+// File: AStarPathfinder.cs
 // Description: Algoritm for calculating the path between two pints in an tile-based world
 // Date: 2018-01-27
 // Written by: Jimmy Berlin
@@ -16,7 +18,12 @@ public class AStarPathfinder {
 	private bool debug;
 
 	Hashtable closedSet;
+
+#if ArrayList
 	ArrayList openSet;
+#else
+    PriorityQueue<Node> openSet;
+#endif
 
 	Node[,] map;
 
@@ -31,6 +38,7 @@ public class AStarPathfinder {
 	float epsilon;
     float N;                    // The anticipated length of the solution.
     float fillrate;
+    float multiplier;
 
     /// <summary>
     /// Configures the A* pathfinder for the world you provide.
@@ -48,6 +56,8 @@ public class AStarPathfinder {
 				tempWorld[x,y] = (float)world[x,y];
 			}
 		}
+
+        multiplier = 1 / Mathf.Sqrt(1 * 1 + 1 * 1);     // diagonal costs are 1 aswell. Pythagoras theorem.
 
 		PreConfig(tempWorld);
 	}
@@ -117,7 +127,11 @@ public class AStarPathfinder {
     /// <param name="goal">target position</param>
 	public void Setup(Vector3 start = new Vector3(), Vector3 goal = new Vector3()) {
 		closedSet = new Hashtable();
+#if ArrayList
 		openSet = new ArrayList();
+#else
+        openSet = new PriorityQueue<Node> ();
+#endif
 
 		startNode = map[(int)start.x, (int)start.z];
 		goalNode = map[(int)goal.x, (int)goal.z];
@@ -145,15 +159,20 @@ public class AStarPathfinder {
 		openSet.Add(startNode);
 
 		while(openSet.Count > 0) {
-			Node current = findLowestFScoreInOpenSet();
-			if(debug) CreateCurrentCube (current.Position3D);
+
+			Node current = findLowestFScoreInOpenSet(); // this should just fetch the value
+
+            if(debug) CreateCurrentCube (current.Position3D);
 
 			if(current == goalNode) {
 				ReconstructPath(out path);
 				return true;
 			}
-			
+#if ArrayList
 			openSet.Remove(current);
+#else
+            openSet.Remove();
+#endif
 			closedSet.Add(current, current);
 
 			foreach(Node neighbour in current.Neighbors) {
@@ -175,6 +194,9 @@ public class AStarPathfinder {
 				neighbour.From = current;
 				neighbour.GScore = tentative_gScore;
                 neighbour.FScore = neighbour.GScore + h(neighbour, closedSet.Count);
+#if !ArrayList
+                openSet.Update(neighbour);
+#endif
 			}
 		}
 		return false;
@@ -187,7 +209,7 @@ public class AStarPathfinder {
     /// <returns>float with heuristic distance to goal node.</returns>
     private float h(Node n, int dn = 0) {
         if(weighting == Weighting.Dynamic) {
-            float hn = Vector3.Distance(n.Position3D, goalNode.Position3D) * 0.99f;
+            float hn = Vector3.Distance(n.Position3D, goalNode.Position3D) * multiplier;
 
             float wn = 0;
             if (dn < N) {
@@ -196,9 +218,9 @@ public class AStarPathfinder {
 
             return (1 + epsilon * wn) * hn;
         } else if(weighting == Weighting.Static) {
-            return Vector3.Distance(n.Position3D, goalNode.Position3D) * epsilon;
+            return Vector3.Distance(n.Position3D, goalNode.Position3D) * multiplier * epsilon;
         } else {
-            return Vector3.Distance(n.Position3D, goalNode.Position3D) * 0.99f;
+            return Vector3.Distance(n.Position3D, goalNode.Position3D) * multiplier;
         }        
     }
 
@@ -208,6 +230,7 @@ public class AStarPathfinder {
 	/// </summary>
 	/// <returns>Node with lowest f-score</returns>
 	private Node findLowestFScoreInOpenSet() {          // TODO: Make this O(log n) and you're safe
+#if ArrayList
 		Node lowest = (Node)openSet[0];
 
 		foreach (Node n in openSet) {
@@ -215,7 +238,23 @@ public class AStarPathfinder {
 				lowest = n;
 			}
 		}
+#else
+        Node lowest = openSet.getList()[0];
+        for (int i=0;i<openSet.Count;i++) {
+            Node n = openSet.getList()[i];
+			if (n.FScore < lowest.FScore) {
+				lowest = n;
+			}
+		}
 
+        Node head = openSet.Peek();
+
+        if(lowest != head) {
+            Debug.Log("ERROR!!! Not the same: Lowest: " + lowest.FScore + " head: " + head.FScore + " IsConsistent: " + openSet.IsConsistent() + "\n" + openSet.ToString());
+        } else {
+            Debug.Log("IsConsistent: " + openSet.IsConsistent());
+        }
+#endif
 		return lowest;
 	}
 
