@@ -1,4 +1,6 @@
 ﻿#define ArrayList
+// TODO: Update in priority queue really suck balls.
+
 
 // File: AStarPathfinder.cs
 // Description: Algoritm for calculating the path between two pints in an tile-based world
@@ -38,7 +40,6 @@ public class AStarPathfinder {
 	float epsilon;
     float N;                    // The anticipated length of the solution.
     float fillrate;
-    float multiplier;
 
     /// <summary>
     /// Configures the A* pathfinder for the world you provide.
@@ -56,9 +57,6 @@ public class AStarPathfinder {
 				tempWorld[x,y] = (float)world[x,y];
 			}
 		}
-
-        //multiplier = 1 / Mathf.Sqrt(1 * 1 + 1 * 1);     // diagonal costs are 1 aswell. Pythagoras theorem.
-        multiplier = 1;         // Apparently we dont need this.
 
 		PreConfig(tempWorld);
 	}
@@ -160,8 +158,11 @@ public class AStarPathfinder {
 		openSet.Add(startNode);
 
 		while(openSet.Count > 0) {
-
+#if ArrayList
 			Node current = findLowestFScoreInOpenSet(); // this should just fetch the value
+#else
+            Node current = openSet.Remove();
+#endif
 
             if(debug) CreateCurrentCube (current.Position3D);
 
@@ -171,8 +172,6 @@ public class AStarPathfinder {
 			}
 #if ArrayList
 			openSet.Remove(current);
-#else
-            openSet.Remove();
 #endif
 			closedSet.Add(current, current);
 
@@ -186,14 +185,15 @@ public class AStarPathfinder {
                     neighbour.From = current;
                     neighbour.GScore = tentative_gScore;
                     neighbour.FScore = neighbour.GScore + h(neighbour, closedSet.Count);
-#if !ArrayList
-                    openSet.Update(neighbour);
-#endif
                 }
 
                 if (!openSet.Contains(neighbour)) {
                     openSet.Add(neighbour);
                     if (debug) CreateNeighbourCube(neighbour.Position3D);
+                } else {
+#if !ArrayList
+                    openSet.Update(neighbour);
+#endif
                 }
 
 			}
@@ -208,7 +208,7 @@ public class AStarPathfinder {
     /// <returns>float with heuristic distance to goal node.</returns>
     private float h(Node n, int dn = 0) {
         if(weighting == Weighting.Dynamic) {
-            float hn = Vector3.Distance(n.Position3D, goalNode.Position3D) * multiplier;
+            float hn = Vector3.Distance(n.Position3D, goalNode.Position3D);
 
             float wn = 0;
             if (dn < N) {
@@ -217,19 +217,19 @@ public class AStarPathfinder {
 
             return (1 + epsilon * wn) * hn;
         } else if(weighting == Weighting.Static) {
-            return Vector3.Distance(n.Position3D, goalNode.Position3D) * multiplier * epsilon;
+            return Vector3.Distance(n.Position3D, goalNode.Position3D) * epsilon;
         } else {
-            return Vector3.Distance(n.Position3D, goalNode.Position3D) * multiplier;
+            return Vector3.Distance(n.Position3D, goalNode.Position3D);
         }        
     }
 
+#if ArrayList
 	/// <summary>
 	/// Finds the lowest f-score in the open set.
     /// Slow ass implementation. Works in O(n).
 	/// </summary>
 	/// <returns>Node with lowest f-score</returns>
 	private Node findLowestFScoreInOpenSet() {          // TODO: Make this O(log n) and you're safe
-#if ArrayList
 		Node lowest = (Node)openSet[0];
 
 		foreach (Node n in openSet) {
@@ -237,27 +237,12 @@ public class AStarPathfinder {
 				lowest = n;
 			}
 		}
-#else
-        Node lowest = openSet.getList()[0];
-        for (int i=0;i<openSet.Count;i++) {
-            Node n = openSet.getList()[i];
-			if (n.FScore < lowest.FScore) {
-				lowest = n;
-			}
-		}
-
-        Node head = openSet.Peek();
-
-        if(lowest != head) {
-            Debug.Log("ERROR!!! Not the same: Lowest: " + lowest.FScore + " head: " + head.FScore + " IsConsistent: " + openSet.IsConsistent() + "\n" + openSet.ToString());
-        } else {
-            Debug.Log("IsConsistent: " + openSet.IsConsistent());
-        }
-#endif
+        Debug.Log("lowest: " + lowest);
 		return lowest;
-	}
+    }
+#endif
 
-	/// <summary>
+    /// <summary>
 	/// Rebuilds the path from the calculated shit.
 	/// </summary>
 	/// <returns>Node with lowest f-score</returns>

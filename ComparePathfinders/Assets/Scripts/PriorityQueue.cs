@@ -3,7 +3,7 @@
 // Date: 2018-01-27
 // Written by: Jimmy Berlin
 
-//#define hashtable
+#define hashtable       // with hashtable works ok, but for some reason, the multithreading did not work as it should.
 
 using System;
 using System.Collections;
@@ -59,7 +59,7 @@ public class PriorityQueue<T> where T : IComparable {
 
         BubbleUp();     // should return index.
 #if hashtable
-        table.Add(n, pos);    // Add to table
+        table.Add(n, n);    // Add to table
 #endif
     }
 

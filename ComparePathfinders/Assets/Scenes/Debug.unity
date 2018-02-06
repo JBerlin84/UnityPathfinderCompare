@@ -175,9 +175,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   start: {x: 2, y: 0, z: 2}
   goal: {x: 12, y: 0, z: 20}
-  epsilon: 2
+  epsilon: 5
   debugDisplay: 1
-  weighting: 2
+  weighting: 0
   fillrate: 0.5
 --- !u!1 &754519793
 GameObject:

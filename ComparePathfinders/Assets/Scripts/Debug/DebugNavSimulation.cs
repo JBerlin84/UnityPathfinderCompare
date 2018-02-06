@@ -32,11 +32,12 @@ public class DebugNavSimulation : MonoBehaviour {
 	void Start() {
 		world = worldGeneratorTiled.World;
 		aStar = new AStarPathfinder (world, epsilon, weighting, fillrate, debugDisplay);
+        Time.timeScale=0.1f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (run) {
+        if (run) {
 			aStar.Setup (start, goal);
 			ArrayList path;
 			aStar.CalculatePath (out path);
@@ -47,7 +48,7 @@ public class DebugNavSimulation : MonoBehaviour {
 				}
 			}
 
-			run = false;
+            run = false;
 		}
 	}
 
