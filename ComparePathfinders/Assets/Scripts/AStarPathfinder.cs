@@ -181,23 +181,21 @@ public class AStarPathfinder {
 					continue;
 				}
 
-				if(!openSet.Contains(neighbour)) {
-					openSet.Add(neighbour);
-					if (debug) CreateNeighbourCube (neighbour.Position3D);
-				}
-
-				
 				float tentative_gScore = current.GScore + Vector3.Distance(current.Position3D, neighbour.Position3D); //Distance to neighbour
-				if(tentative_gScore >= neighbour.GScore) {
-					continue;	// This is not a better path
-				}
-
-				neighbour.From = current;
-				neighbour.GScore = tentative_gScore;
-                neighbour.FScore = neighbour.GScore + h(neighbour, closedSet.Count);
+				if(tentative_gScore < neighbour.GScore) {
+                    neighbour.From = current;
+                    neighbour.GScore = tentative_gScore;
+                    neighbour.FScore = neighbour.GScore + h(neighbour, closedSet.Count);
 #if !ArrayList
-                openSet.Update(neighbour);
+                    openSet.Update(neighbour);
 #endif
+                }
+
+                if (!openSet.Contains(neighbour)) {
+                    openSet.Add(neighbour);
+                    if (debug) CreateNeighbourCube(neighbour.Position3D);
+                }
+
 			}
 		}
 		return false;
