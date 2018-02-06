@@ -1,4 +1,4 @@
-﻿// #define ArrayList
+﻿#define ArrayList
 
 // File: AStarPathfinder.cs
 // Description: Algoritm for calculating the path between two pints in an tile-based world
@@ -57,7 +57,8 @@ public class AStarPathfinder {
 			}
 		}
 
-        multiplier = 1 / Mathf.Sqrt(1 * 1 + 1 * 1);     // diagonal costs are 1 aswell. Pythagoras theorem.
+        //multiplier = 1 / Mathf.Sqrt(1 * 1 + 1 * 1);     // diagonal costs are 1 aswell. Pythagoras theorem.
+        multiplier = 1;         // Apparently we dont need this.
 
 		PreConfig(tempWorld);
 	}
